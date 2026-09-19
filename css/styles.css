@@ -140,23 +140,17 @@ button {
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
+  overflow: hidden;
   color: var(--bone);
+  background: #7d9eab;
 }
 
-.hero::after {
-  content: "";
+.hero-canvas {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(16, 24, 21, 0.48) 0%, transparent 32%, transparent 58%, rgba(16, 24, 21, 0.58) 100%);
-  pointer-events: none;
-}
-
-.hero img {
   display: block;
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  object-fit: cover;
+  height: 100%;
 }
 
 .hero-caption {
