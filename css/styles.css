@@ -143,6 +143,14 @@ button {
   color: var(--bone);
 }
 
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16, 24, 21, 0.48) 0%, transparent 32%, transparent 58%, rgba(16, 24, 21, 0.58) 100%);
+  pointer-events: none;
+}
+
 .hero img {
   display: block;
   width: 100%;
@@ -155,6 +163,7 @@ button {
   position: absolute;
   left: 1.4rem;
   bottom: 1.8rem;
+  z-index: 1;
   max-width: 22rem;
 }
 
