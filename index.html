@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1C2B24" />
+    <title>张焜 / Kun Zhang</title>
+    <meta name="description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header is-over-hero" id="top">
+      <a class="brand" href="#top">张焜</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#music" data-i18n="nav.music">音乐</a>
+        <a href="#computing" data-i18n="nav.computing">计算机</a>
+        <a href="#writing" data-i18n="nav.writing">写作</a>
+        <a href="#photography" data-i18n="nav.photography">摄影</a>
+      </nav>
+      <div class="header-tools">
+        <button type="button" class="resume-open" data-i18n="nav.resume">履历</button>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="zh" aria-pressed="true">中</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <img src="assets/photos/IMG_1799.jpg" alt="" />
+        <div class="hero-caption">
+          <h1>张焜</h1>
+          <p class="hero-latin">Kun Zhang</p>
+          <p class="hero-line" data-i18n="hero.line">南京审计大学审计学专业</p>
+        </div>
+      </section>
+
+      <section class="block" id="music">
+        <h2 data-i18n="music.title">音乐</h2>
+        <p class="prose" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
+        <a
+          class="quiet-link"
+          href="https://music.163.com/#/artist?id=94272555"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="music.link"
+          >网易云主页</a
+        >
+      </section>
+
+      <section class="block" id="computing">
+        <h2 data-i18n="computing.title">计算机</h2>
+        <p class="prose" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
+        <div class="work-list" id="computing-list"></div>
+        <a
+          class="quiet-link"
+          href="https://github.com/Charliezk6"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="computing.github"
+          >GitHub</a
+        >
+      </section>
+
+      <section class="block" id="writing">
+        <h2 data-i18n="writing.title">写作</h2>
+        <p class="prose" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
+        <div class="wechat-row">
+          <p class="wechat-name">KunKun杂谈</p>
+          <button type="button" class="copy-btn" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">复制账号</button>
+        </div>
+      </section>
+
+      <section class="block photos" id="photography">
+        <h2 data-i18n="photo.title">摄影</h2>
+        <p class="prose" data-i18n="photo.body">点开看大图。</p>
+        <div class="gallery" id="gallery"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p data-i18n="footer">© 2026 张焜</p>
+      <div class="footer-links">
+        <a href="mailto:13543478517@163.com">邮箱</a>
+        <a href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button type="button" class="resume-open" data-i18n="nav.resume">履历</button>
+      </div>
+    </footer>
+
+    <dialog class="resume-dialog" id="resume">
+      <div class="resume-bar">
+        <h2 data-i18n="resume.title">履历</h2>
+        <button type="button" class="resume-close" data-i18n="resume.close">关闭</button>
+      </div>
+      <div class="resume-scroll">
+        <p class="edu-school" data-i18n="resume.edu">南京审计大学 · 审计学专业</p>
+        <p class="edu-meta" data-i18n="resume.eduMeta">GPA 3.75 / 5.0（4 / 83）</p>
+        <p class="edu-honors" data-i18n="resume.honors">三好学生 · 优秀学生干部 · 综合一等奖学金 ×2 · 优秀团员</p>
+        <p class="skills" data-i18n="resume.skills">Python · Excel · SQL Server · IELTS 7.0 · CET-6 · 粤语</p>
+        <h3 data-i18n="resume.pathTitle">经历</h3>
+        <ol class="timeline" id="timeline"></ol>
+        <h3 data-i18n="resume.researchTitle">研究与竞赛</h3>
+        <div class="research-list" id="research-list"></div>
+        <a
+          class="quiet-link"
+          href="https://github.com/Charliezk6/CUMCM-2026"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="resume.github"
+          >CUMCM-2026</a
+        >
+        <ul class="connect-list">
+          <li>
+            <span data-i18n="connect.emailLabel">邮箱</span>
+            <a href="mailto:13543478517@163.com">13543478517@163.com</a>
+            <button type="button" class="copy-btn" data-copy="13543478517@163.com" data-i18n-copy="copy.email">复制</button>
+          </li>
+          <li>
+            <span>GitHub</span>
+            <a href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">Charliezk6</a>
+          </li>
+        </ul>
+      </div>
+    </dialog>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <button type="button" class="lightbox-close" aria-label="Close">×</button>
+      <button type="button" class="lightbox-prev" aria-label="Previous">‹</button>
+      <img alt="" />
+      <button type="button" class="lightbox-next" aria-label="Next">›</button>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/photos.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+personal photography collection/
+*.docx
+*.DNG
+*.HEIC
+.env
+.env.*
