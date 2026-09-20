@@ -4,21 +4,14 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const stage = art.querySelector(".hero-stage");
-  const viewW = 1600;
-  const viewH = 900;
-  const spanX = 1180;
-  const spanY = 840;
+  const mobileQuery = window.matchMedia("(max-width: 833px)");
   const paths = [...art.querySelectorAll(".draw")];
 
-  const fitStage = () => {
-    if (!stage) return;
-    const rect = art.getBoundingClientRect();
-    if (rect.width < 8 || rect.height < 8) return;
-    const cover = Math.max(rect.width / viewW, rect.height / viewH);
-    const visibleWidth = rect.width / cover;
-    const visibleHeight = rect.height / cover;
-    const next = Math.min(1, visibleWidth / spanX, visibleHeight / spanY);
-    stage.setAttribute("transform", `scale(${Math.max(0.32, next)})`);
+  const fitArt = () => {
+    const mobile = mobileQuery.matches;
+    art.setAttribute("preserveAspectRatio", mobile ? "xMidYMid meet" : "xMidYMid slice");
+    art.setAttribute("viewBox", mobile ? "240 40 1120 820" : "0 0 1600 900");
+    if (stage) stage.removeAttribute("transform");
   };
 
   paths.forEach((path, index) => {
@@ -48,10 +41,9 @@
     }
   };
 
-  window.requestAnimationFrame(() => {
-    fitStage();
-    window.requestAnimationFrame(reveal);
-  });
-  window.addEventListener("resize", fitStage);
-  window.visualViewport?.addEventListener("resize", fitStage);
+  fitArt();
+  window.requestAnimationFrame(() => window.requestAnimationFrame(reveal));
+  window.addEventListener("resize", fitArt);
+  mobileQuery.addEventListener("change", fitArt);
+  window.visualViewport?.addEventListener("resize", fitArt);
 })();
