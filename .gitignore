@@ -6,3 +6,5 @@ personal photography collection/
 *.HEIC
 .env
 .env.*
+*.md
+*.txt

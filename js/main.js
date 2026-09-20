@@ -2,12 +2,13 @@
   const STORAGE_KEY = "kz-lang";
   const root = document.documentElement;
   const toast = document.getElementById("toast");
-  const header = document.querySelector(".site-header");
   const timelineEl = document.getElementById("timeline");
   const researchEl = document.getElementById("research-list");
   const computingEl = document.getElementById("computing-list");
+  const writingEl = document.getElementById("writing-list");
   const galleryEl = document.getElementById("gallery");
   const resumeEl = document.getElementById("resume");
+  const resumeClose = document.querySelector(".resume-close");
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = lightbox.querySelector("img");
   const metaDescription = document.querySelector('meta[name="description"]');
@@ -57,10 +58,22 @@
     computingEl.innerHTML = items
       .map(
         (item) => `
-      <article class="work-item">
+      <article class="utility-card">
         <h3>${item.title}</h3>
         <p>${item.detail}</p>
       </article>`
+      )
+      .join("");
+  };
+
+  const renderWriting = (posts) => {
+    if (!writingEl || !Array.isArray(posts)) return;
+    writingEl.innerHTML = posts
+      .map(
+        (post) => `
+      <a class="utility-card writing-card" href="${post.href}" target="_blank" rel="noopener noreferrer">
+        <h3>${post.title}</h3>
+      </a>`
       )
       .join("");
   };
@@ -84,6 +97,7 @@
     root.lang = lang === "en" ? "en" : "zh-CN";
     document.title = lang === "en" ? "Kun Zhang / 张焜" : "张焜 / Kun Zhang";
     if (metaDescription) metaDescription.setAttribute("content", dict.metaDescription);
+    if (resumeClose) resumeClose.setAttribute("aria-label", dict.resume.close);
 
     document.querySelectorAll("button[data-lang]").forEach((btn) => {
       btn.setAttribute("aria-pressed", String(btn.dataset.lang === lang));
@@ -107,6 +121,7 @@
     });
 
     renderComputing(dict.computing.items);
+    renderWriting(dict.writing.posts);
     renderTimeline(dict.resume.path);
     renderResearch(dict.resume.research);
   };
@@ -168,7 +183,7 @@
   document.querySelectorAll(".resume-open").forEach((btn) => {
     btn.addEventListener("click", openResume);
   });
-  document.querySelector(".resume-close").addEventListener("click", closeResume);
+  resumeClose.addEventListener("click", closeResume);
   resumeEl.addEventListener("click", (event) => {
     if (event.target === resumeEl) closeResume();
   });
@@ -197,20 +212,12 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && resumeEl.open) closeResume();
     if (lightbox.hidden) return;
     if (event.key === "Escape") hidePhoto();
     if (event.key === "ArrowLeft") showPhoto(photoIndex - 1);
     if (event.key === "ArrowRight") showPhoto(photoIndex + 1);
   });
-
-  const hero = document.querySelector(".hero");
-  const onScroll = () => {
-    const pastHero = window.scrollY > (hero?.offsetHeight || 480) - 72;
-    header.classList.toggle("is-over-hero", !pastHero);
-    header.classList.toggle("is-solid", pastHero);
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
 
   renderGallery();
   applyLang(lang);

@@ -3,19 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1C2B24" />
+    <meta name="theme-color" content="#faf9f5" />
     <title>张焜 / Kun Zhang</title>
     <meta name="description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <header class="site-header is-over-hero" id="top">
+    <header class="site-header" id="top">
       <a class="brand" href="#top">张焜</a>
       <nav class="nav-links" aria-label="Primary">
         <a href="#music" data-i18n="nav.music">音乐</a>
@@ -24,64 +24,199 @@
         <a href="#photography" data-i18n="nav.photography">摄影</a>
       </nav>
       <div class="header-tools">
-        <button type="button" class="resume-open" data-i18n="nav.resume">履历</button>
         <div class="lang-switch" role="group" aria-label="Language">
-          <button type="button" data-lang="zh" aria-pressed="true">中</button>
-          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" class="lang-chip" data-lang="zh" aria-pressed="true">中</button>
+          <button type="button" class="lang-chip" data-lang="en" aria-pressed="false">EN</button>
         </div>
+        <button type="button" class="btn-primary resume-open" data-i18n="nav.resume">履历</button>
       </div>
     </header>
 
     <main>
       <section class="hero">
-        <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
-        <div class="hero-caption">
+        <svg
+          class="hero-art"
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <ellipse class="mist" cx="180" cy="160" rx="140" ry="90" />
+          <ellipse class="mist mist-soft" cx="1420" cy="740" rx="150" ry="96" />
+
+          <g transform="translate(210, 28)">
+            <g class="drift">
+              <path class="draw" stroke-width="1.5" d="M168 148 C 204 108, 268 104, 296 152 C 322 200, 286 242, 232 246 C 178 248, 138 204, 168 148" />
+              <path class="draw" stroke-width="1.25" d="M160 144 C 128 128, 136 78, 198 90 C 246 64, 304 96, 296 146" />
+              <path class="draw" stroke-width="1.2" d="M214 176 C 224 168, 240 168, 248 178" />
+              <path class="draw" stroke-width="1.2" d="M260 180 C 270 172, 286 174, 292 184" />
+              <path class="draw" stroke-width="1.15" d="M250 190 242 216 260 220" />
+              <path class="draw accent" stroke-width="1.4" d="M226 232 C 240 242, 262 240, 276 230" />
+              <path class="draw" stroke-width="1.3" d="M230 246 C 234 260, 238 272, 236 286" />
+              <path class="draw" stroke-width="1.45" d="M148 300 C 196 276, 268 274, 328 304" />
+              <path class="draw" stroke-width="1.3" d="M236 286 C 228 360, 224 430, 232 508" />
+              <path class="draw" stroke-width="1.25" d="M186 318 C 200 400, 208 468, 198 508 C 228 520, 268 518, 298 500 C 288 430, 280 360, 292 318" />
+              <path class="draw" stroke-width="1.3" d="M164 304 C 118 348, 92 410, 84 468" />
+              <path class="draw" stroke-width="1.2" d="M78 464 C 66 472, 68 490, 86 486 C 96 482, 96 470, 84 468" />
+              <path class="draw" stroke-width="1.3" d="M314 306 C 368 338, 418 352, 462 338" />
+              <path class="draw" stroke-width="1.2" d="M458 332 C 448 322, 468 310, 480 322 C 492 334, 478 348, 466 340" />
+            </g>
+          </g>
+
+          <g transform="translate(-300, 36)">
+            <g class="drift-late">
+              <path class="draw" stroke-width="1.5" d="M1228 168 C 1310 88, 1488 76, 1552 142 L 1516 178 C 1420 112, 1308 146, 1256 192 Z" />
+              <path class="draw" stroke-width="1.45" d="M1236 198 C 1364 128, 1524 140, 1544 206 L 1520 276 C 1396 312, 1268 292, 1242 240 Z" />
+              <path class="draw" stroke-width="1.3" d="M1258 244 1470 214 1462 248 1250 278 Z" />
+              <path class="draw" stroke-width="0.95" d="M1280 250 1274 272 M1308 246 1302 268 M1336 242 1330 264 M1364 238 1358 260 M1392 234 1386 256 M1420 230 1414 252" />
+              <path class="draw accent" stroke-width="1.3" d="M1362 238 1356 260" />
+              <path class="draw" stroke-width="1.15" d="M1284 276 1276 318 M1496 258 1506 304" />
+            </g>
+          </g>
+
+          <g transform="translate(200, 72)">
+            <g class="drift drift-alt">
+              <path class="draw" stroke-width="1.45" d="M64 520 C 168 488, 286 480, 398 498" />
+              <path class="draw" stroke-width="1.45" d="M68 534 C 172 502, 290 494, 402 512" />
+              <path class="draw" stroke-width="1.2" d="M64 520 C 56 528, 56 528, 68 534" />
+              <path class="draw" stroke-width="1.2" d="M398 498 C 412 500, 414 510, 402 512" />
+              <path class="draw" stroke-width="1.1" d="M140 506 a 3.2 2.4 0 1 1 .2 0" />
+              <path class="draw" stroke-width="1.1" d="M198 498 a 3.2 2.4 0 1 1 .2 0" />
+              <path class="draw" stroke-width="1.1" d="M256 494 a 3.2 2.4 0 1 1 .2 0" />
+              <path class="draw" stroke-width="1.1" d="M314 492 a 3.2 2.4 0 1 1 .2 0" />
+              <path class="draw accent" stroke-width="1.45" d="M116 518 a 6.5 4.6 -12 1 1 .2 0" />
+              <path class="draw accent" stroke-width="1.15" d="M60 528 C 34 552, 24 590, 42 620" />
+            </g>
+          </g>
+
+          <g transform="translate(-390, -28)">
+            <g class="drift">
+              <path class="draw" stroke-width="1.4" d="M1368 430 h148 a11 11 0 0 1 11 11 v82 a11 11 0 0 1 -11 11 h-148 a11 11 0 0 1 -11 -11 v-82 a11 11 0 0 1 11 -11 z" />
+              <path class="draw" stroke-width="1.2" d="M1418 430 v-16 h62 v16" />
+              <path class="draw" stroke-width="1.35" d="M1444 484 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0" />
+              <path class="draw" stroke-width="1.1" d="M1444 484 m -12 0 a 12 12 0 1 1 24 0 a 12 12 0 1 1 -24 0" />
+              <path class="draw accent" stroke-width="1.4" d="M1444 484 m -4.5 0 a 4.5 4.5 0 1 1 9 0 a 4.5 4.5 0 1 1 -9 0" />
+              <path class="draw accent" stroke-width="1.25" d="M1492 420 m -4.5 0 a 4.5 4.5 0 1 1 9 0 a 4.5 4.5 0 1 1 -9 0" />
+              <path class="draw" stroke-width="1.05" d="M1382 446 h22" />
+            </g>
+          </g>
+
+          <g transform="translate(-210, -64)">
+            <g class="drift-late">
+              <path class="draw" stroke-width="1.35" d="M1148 668 1268 654 1260 812 1136 822 Z" />
+              <path class="draw" stroke-width="1.35" d="M1268 654 1396 668 1386 826 1260 812 Z" />
+              <path class="draw" stroke-width="1.45" d="M1268 654 1260 812" />
+              <path class="draw" stroke-width="0.9" d="M1168 704 h82 M1166 728 h82 M1164 752 h80 M1162 776 h76" />
+              <path class="draw" stroke-width="0.9" d="M1282 706 h86 M1284 730 h82 M1286 754 h76" />
+              <path class="draw accent" stroke-width="1.25" d="M1368 698 C 1380 686, 1396 698, 1384 712" />
+            </g>
+          </g>
+
+          <g transform="translate(120, -36)">
+            <g class="drift drift-alt">
+              <path class="draw" stroke-width="1.5" d="M168 812 C 268 768, 384 728, 498 696" />
+              <path class="draw" stroke-width="1.3" d="M176 822 C 276 778, 392 738, 506 706" />
+              <path class="draw" stroke-width="1.2" d="M186 804 C 284 762, 398 724, 510 694" />
+              <path class="draw" stroke-width="1.25" d="M498 696 540 678 512 712" />
+              <path class="draw accent" stroke-width="1.4" d="M544 670 C 556 660, 568 674, 554 686 C 542 694, 534 678, 544 670" />
+            </g>
+          </g>
+
+          <g transform="translate(28, -520)">
+            <g class="drift">
+              <path class="draw" stroke-width="1.2" d="M102 668 C 96 638, 80 614, 70 602" />
+              <path class="draw" stroke-width="1.2" d="M122 672 C 118 638, 108 612, 102 598" />
+              <path class="draw" stroke-width="1.2" d="M144 672 C 152 638, 168 614, 180 602" />
+              <path class="draw" stroke-width="1.2" d="M164 668 C 174 638, 192 616, 206 606" />
+              <path class="draw accent" stroke-width="1.3" d="M100 604 C 88 590, 106 578, 114 594 C 124 582, 138 596, 122 608 C 112 618, 104 614, 100 604" />
+              <path class="draw accent" stroke-width="1.3" d="M178 604 C 166 590, 184 578, 192 594 C 202 582, 216 596, 200 608 C 190 618, 182 614, 178 604" />
+            </g>
+          </g>
+
+          <g transform="translate(-250, 620)">
+            <g class="drift-late">
+              <path class="draw" stroke-width="1.15" d="M1088 168 C 1082 138, 1066 114, 1056 102" />
+              <path class="draw" stroke-width="1.15" d="M1108 172 C 1104 138, 1094 112, 1088 98" />
+              <path class="draw" stroke-width="1.15" d="M1130 172 C 1138 138, 1154 114, 1166 102" />
+              <path class="draw" stroke-width="1.15" d="M1150 168 C 1160 138, 1178 116, 1192 106" />
+              <path class="draw accent" stroke-width="1.25" d="M1086 104 C 1074 90, 1092 78, 1100 94 C 1110 82, 1124 96, 1108 108 C 1098 118, 1090 114, 1086 104" />
+              <path class="draw accent" stroke-width="1.25" d="M1164 104 C 1152 90, 1170 78, 1178 94 C 1188 82, 1202 96, 1186 108 C 1176 118, 1168 114, 1164 104" />
+            </g>
+          </g>
+
+          <g transform="translate(-240, 8)">
+            <g class="drift drift-alt">
+              <path class="draw" stroke-width="1.15" d="M1488 628 C 1482 598, 1466 574, 1456 562" />
+              <path class="draw" stroke-width="1.15" d="M1508 632 C 1504 598, 1494 572, 1488 558" />
+              <path class="draw" stroke-width="1.15" d="M1530 632 C 1538 598, 1554 574, 1566 562" />
+              <path class="draw" stroke-width="1.15" d="M1550 628 C 1560 598, 1578 576, 1592 566" />
+              <path class="draw accent" stroke-width="1.25" d="M1486 564 C 1474 550, 1492 538, 1500 554 C 1510 542, 1524 556, 1508 568 C 1498 578, 1490 574, 1486 564" />
+              <path class="draw accent" stroke-width="1.25" d="M1564 564 C 1552 550, 1570 538, 1578 554 C 1588 542, 1602 556, 1586 568 C 1576 578, 1568 574, 1564 564" />
+            </g>
+          </g>
+        </svg>
+        <div class="hero-copy">
           <h1>张焜</h1>
           <p class="hero-latin">Kun Zhang</p>
           <p class="hero-line" data-i18n="hero.line">南京审计大学审计学专业</p>
+          <div class="hero-actions">
+            <button type="button" class="btn-primary resume-open" data-i18n="nav.resume">履历</button>
+            <a class="btn-secondary-pill" href="#photography" data-i18n="nav.photography">摄影</a>
+          </div>
         </div>
       </section>
 
-      <section class="block" id="music">
-        <h2 data-i18n="music.title">音乐</h2>
-        <p class="prose" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
-        <a
-          class="quiet-link"
-          href="https://music.163.com/#/artist?id=94272555"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-i18n="music.link"
-          >网易云主页</a
-        >
+      <section class="tile tile-light" id="music">
+        <div class="tile-inner">
+          <h2 data-i18n="music.title">音乐</h2>
+          <p class="lead" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
+          <a
+            class="btn-primary"
+            href="https://music.163.com/#/artist?id=94272555"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="music.link"
+            >网易云主页</a
+          >
+        </div>
       </section>
 
-      <section class="block" id="computing">
-        <h2 data-i18n="computing.title">计算机</h2>
-        <p class="prose" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
-        <div class="work-list" id="computing-list"></div>
-        <a
-          class="quiet-link"
-          href="https://github.com/Charliezk6"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-i18n="computing.github"
-          >GitHub</a
-        >
+      <section class="tile tile-parchment" id="computing">
+        <div class="tile-inner tile-wide">
+          <h2 data-i18n="computing.title">计算机</h2>
+          <p class="lead" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
+          <div class="card-grid" id="computing-list"></div>
+          <a
+            class="btn-secondary-pill"
+            href="https://github.com/Charliezk6"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="computing.github"
+            >GitHub</a
+          >
+        </div>
       </section>
 
-      <section class="block" id="writing">
-        <h2 data-i18n="writing.title">写作</h2>
-        <p class="prose" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
-        <div class="wechat-row">
+      <section class="tile tile-card" id="writing">
+        <div class="tile-inner tile-wide">
+          <h2 data-i18n="writing.title">写作</h2>
+          <p class="lead" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
           <p class="wechat-name">KunKun杂谈</p>
-          <button type="button" class="copy-btn" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">复制账号</button>
+          <button type="button" class="copy-btn text-link" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">
+            复制账号
+          </button>
+          <div class="card-grid writing-grid" id="writing-list"></div>
         </div>
       </section>
 
-      <section class="block photos" id="photography">
-        <h2 data-i18n="photo.title">摄影</h2>
-        <p class="prose" data-i18n="photo.body">点开看大图。</p>
-        <div class="gallery" id="gallery"></div>
+      <section class="tile tile-light" id="photography">
+        <div class="tile-inner tile-wide">
+          <h2 data-i18n="photo.title">摄影</h2>
+          <p class="lead" data-i18n="photo.body">点开看大图。</p>
+          <div class="gallery" id="gallery"></div>
+        </div>
       </section>
     </main>
 
@@ -90,14 +225,14 @@
       <div class="footer-links">
         <a href="mailto:13543478517@163.com">邮箱</a>
         <a href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button type="button" class="resume-open" data-i18n="nav.resume">履历</button>
+        <button type="button" class="text-link resume-open" data-i18n="nav.resume">履历</button>
       </div>
     </footer>
 
     <dialog class="resume-dialog" id="resume">
       <div class="resume-bar">
         <h2 data-i18n="resume.title">履历</h2>
-        <button type="button" class="resume-close" data-i18n="resume.close">关闭</button>
+        <button type="button" class="resume-close" aria-label="关闭">×</button>
       </div>
       <div class="resume-scroll">
         <p class="edu-school" data-i18n="resume.edu">南京审计大学 · 审计学专业</p>
@@ -109,7 +244,7 @@
         <h3 data-i18n="resume.researchTitle">研究与竞赛</h3>
         <div class="research-list" id="research-list"></div>
         <a
-          class="quiet-link"
+          class="text-link"
           href="https://github.com/Charliezk6/CUMCM-2026"
           target="_blank"
           rel="noopener noreferrer"
@@ -119,22 +254,24 @@
         <ul class="connect-list">
           <li>
             <span data-i18n="connect.emailLabel">邮箱</span>
-            <a href="mailto:13543478517@163.com">13543478517@163.com</a>
-            <button type="button" class="copy-btn" data-copy="13543478517@163.com" data-i18n-copy="copy.email">复制</button>
+            <a class="text-link" href="mailto:13543478517@163.com">13543478517@163.com</a>
+            <button type="button" class="copy-btn text-link" data-copy="13543478517@163.com" data-i18n-copy="copy.email">
+              复制
+            </button>
           </li>
           <li>
             <span>GitHub</span>
-            <a href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">Charliezk6</a>
+            <a class="text-link" href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">Charliezk6</a>
           </li>
         </ul>
       </div>
     </dialog>
 
     <div class="lightbox" id="lightbox" hidden>
-      <button type="button" class="lightbox-close" aria-label="Close">×</button>
-      <button type="button" class="lightbox-prev" aria-label="Previous">‹</button>
+      <button type="button" class="icon-btn lightbox-close" aria-label="Close">×</button>
+      <button type="button" class="icon-btn lightbox-prev" aria-label="Previous">‹</button>
       <img alt="" />
-      <button type="button" class="lightbox-next" aria-label="Next">›</button>
+      <button type="button" class="icon-btn lightbox-next" aria-label="Next">›</button>
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>

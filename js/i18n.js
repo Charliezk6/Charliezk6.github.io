@@ -38,6 +38,24 @@ window.I18N = {
     writing: {
       title: "写作",
       body: "用公众号慢慢写。微信里搜索账号即可关注。",
+      posts: [
+        {
+          title: "闲谈杂忆——巴基斯坦老友",
+          href: "https://mp.weixin.qq.com/s/2e-bWqLqzpZ6NdOAPJTRTQ",
+        },
+        {
+          title: "叹味记——走街窜巷老南京",
+          href: "https://mp.weixin.qq.com/s/RSNG8BKjpROby_JTvoLfwg",
+        },
+        {
+          title: "旅行杂忆——喀什",
+          href: "https://mp.weixin.qq.com/s/it0OtJ_ZO3ZyLeZjW0HiUA",
+        },
+        {
+          title: "曾经是如此浓墨重彩——《无国之谍》浅谈",
+          href: "https://mp.weixin.qq.com/s/taNNxxDOwp3Evi9V5P1Sdw",
+        },
+      ],
     },
     photo: {
       title: "摄影",
@@ -157,6 +175,24 @@ window.I18N = {
     writing: {
       title: "Writing",
       body: "I write slowly on WeChat. Search the account name to follow.",
+      posts: [
+        {
+          title: "Recollections — An Old Friend from Pakistan",
+          href: "https://mp.weixin.qq.com/s/2e-bWqLqzpZ6NdOAPJTRTQ",
+        },
+        {
+          title: "Notes on Taste — Wandering Old Nanjing",
+          href: "https://mp.weixin.qq.com/s/RSNG8BKjpROby_JTvoLfwg",
+        },
+        {
+          title: "Travel Notes — Kashgar",
+          href: "https://mp.weixin.qq.com/s/it0OtJ_ZO3ZyLeZjW0HiUA",
+        },
+        {
+          title: "Once So Vivid — A Note on Spies of No Country",
+          href: "https://mp.weixin.qq.com/s/taNNxxDOwp3Evi9V5P1Sdw",
+        },
+      ],
     },
     photo: {
       title: "Photography",
