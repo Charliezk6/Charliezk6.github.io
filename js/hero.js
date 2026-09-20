@@ -3,7 +3,23 @@
   if (!art) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stage = art.querySelector(".hero-stage");
+  const viewW = 1600;
+  const viewH = 900;
+  const spanX = 1180;
+  const spanY = 840;
   const paths = [...art.querySelectorAll(".draw")];
+
+  const fitStage = () => {
+    if (!stage) return;
+    const rect = art.getBoundingClientRect();
+    if (rect.width < 8 || rect.height < 8) return;
+    const cover = Math.max(rect.width / viewW, rect.height / viewH);
+    const visibleWidth = rect.width / cover;
+    const visibleHeight = rect.height / cover;
+    const next = Math.min(1, visibleWidth / spanX, visibleHeight / spanY);
+    stage.setAttribute("transform", `scale(${Math.max(0.32, next)})`);
+  };
 
   paths.forEach((path, index) => {
     let length = 0;
@@ -32,5 +48,10 @@
     }
   };
 
-  window.requestAnimationFrame(() => window.requestAnimationFrame(reveal));
+  window.requestAnimationFrame(() => {
+    fitStage();
+    window.requestAnimationFrame(reveal);
+  });
+  window.addEventListener("resize", fitStage);
+  window.visualViewport?.addEventListener("resize", fitStage);
 })();
