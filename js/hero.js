@@ -3,15 +3,18 @@
   if (!art) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const stage = art.querySelector(".hero-stage");
   const mobileQuery = window.matchMedia("(max-width: 833px)");
+  const pieces = [...art.querySelectorAll(".hero-piece")];
   const paths = [...art.querySelectorAll(".draw")];
 
   const fitArt = () => {
     const mobile = mobileQuery.matches;
     art.setAttribute("preserveAspectRatio", mobile ? "xMidYMid meet" : "xMidYMid slice");
-    art.setAttribute("viewBox", mobile ? "240 40 1120 820" : "0 0 1600 900");
-    if (stage) stage.removeAttribute("transform");
+    art.setAttribute("viewBox", mobile ? "500 0 600 900" : "0 0 1600 900");
+    pieces.forEach((piece) => {
+      const next = mobile ? piece.dataset.phone : piece.dataset.desk;
+      if (next) piece.setAttribute("transform", next);
+    });
   };
 
   paths.forEach((path, index) => {
