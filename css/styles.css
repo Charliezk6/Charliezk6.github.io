@@ -1817,13 +1817,51 @@ button.work-card {
 .pdf-pages {
   height: 100%;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 12px;
   border-radius: 18px;
   background: #efeae2;
+}
+
+.pdf-stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pdf-pager {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #2a241c;
+}
+
+.pdf-step {
+  border: 1px solid rgba(42, 36, 28, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pdf-step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pdf-count {
+  min-width: 4.5rem;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-align: center;
 }
 
 .pdf-slot {
@@ -1986,11 +2024,18 @@ button.work-card {
 .explore-float span:nth-child(13) { bottom: 12%; right: 30%; }
 .explore-float span:nth-child(14) { top: 48%; left: 8%; animation-delay: -6s; }
 
-.player-fab {
+.player-pop {
   position: fixed;
   top: 18px;
   right: 18px;
   z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.player-fab {
+  position: relative;
   display: grid;
   place-items: center;
   width: 46px;
@@ -2001,6 +2046,17 @@ button.work-card {
   color: #f5f5f5;
   cursor: pointer;
   backdrop-filter: blur(12px);
+}
+
+.player-pop .track {
+  display: none;
+  width: min(380px, calc(100vw - 32px));
+  margin-top: 10px;
+}
+
+.player-pop:hover .track,
+.player-pop:focus-within .track {
+  display: flex;
 }
 
 .eq {
@@ -2028,7 +2084,7 @@ button.work-card {
 .player-fab.is-on .eq i:nth-child(4) { animation-delay: 0.36s; }
 
 @media (max-width: 1100px) {
-  .player-fab {
+  .player-pop {
     top: 76px;
   }
 }

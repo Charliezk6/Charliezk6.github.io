@@ -133,7 +133,7 @@
   };
 
   let pdfTask = null;
-  let pdfObserver = null;
+  let pdfDoc = null;
   let pdfRenderGen = 0;
 
   const sheetLink = (url) =>
@@ -141,10 +141,7 @@
 
   const stopPdf = () => {
     pdfRenderGen += 1;
-    if (pdfObserver) {
-      pdfObserver.disconnect();
-      pdfObserver = null;
-    }
+    pdfDoc = null;
     if (pdfTask) {
       const task = pdfTask;
       pdfTask = null;
@@ -161,37 +158,52 @@
     if (!pages) return;
     stopPdf();
     const gen = pdfRenderGen;
+    const dict = getDict(lang);
     if (!window.pdfjsLib) {
       pages.innerHTML = sheetLink(url);
       return;
     }
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "js/vendor/pdf.worker.min.js";
     try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("missing");
+      const data = await response.arrayBuffer();
+      if (gen !== pdfRenderGen || !pages.isConnected) return;
       const loading = window.pdfjsLib.getDocument({
-        url,
+        data,
         cMapUrl: "js/vendor/cmaps/",
         cMapPacked: true,
+        disableWorker: true,
+        disableRange: true,
+        disableStream: true,
       });
       pdfTask = loading;
       const pdf = await loading.promise;
       if (gen !== pdfRenderGen || !pages.isConnected) return;
-      pages.innerHTML = "";
-      const maxCss = Math.min(Math.max(pages.clientWidth - 24, 280), 920);
-      const slots = [];
-      for (let i = 1; i <= pdf.numPages; i += 1) {
-        const slot = document.createElement("div");
-        slot.className = "pdf-slot";
-        slot.dataset.page = String(i);
-        pages.appendChild(slot);
-        slots.push(slot);
-      }
-      const paint = async (slot) => {
-        if (gen !== pdfRenderGen || slot.dataset.state) return;
-        slot.dataset.state = "busy";
+      pdfDoc = pdf;
+      pages.innerHTML = `
+        <div class="pdf-stage" id="pdf-stage"></div>
+        <div class="pdf-pager">
+          <button type="button" class="pdf-step" id="pdf-prev">${esc(dict.computing.prevPage)}</button>
+          <span class="pdf-count" id="pdf-count"></span>
+          <button type="button" class="pdf-step" id="pdf-next">${esc(dict.computing.nextPage)}</button>
+        </div>`;
+      const stage = document.getElementById("pdf-stage");
+      const count = document.getElementById("pdf-count");
+      const prev = document.getElementById("pdf-prev");
+      const next = document.getElementById("pdf-next");
+      let current = 1;
+      const showPage = async (pageNumber) => {
+        if (gen !== pdfRenderGen || !stage) return;
+        current = pageNumber;
+        count.textContent = `${current} / ${pdf.numPages}`;
+        prev.disabled = current <= 1;
+        next.disabled = current >= pdf.numPages;
+        stage.innerHTML = "";
         try {
-          const page = await pdf.getPage(Number(slot.dataset.page));
+          const page = await pdf.getPage(current);
           if (gen !== pdfRenderGen) return;
           const base = page.getViewport({ scale: 1 });
+          const maxCss = Math.min(Math.max(stage.clientWidth - 8, 280), 920);
           const viewport = page.getViewport({ scale: Math.min(maxCss / base.width, 1.5) });
           const canvas = document.createElement("canvas");
           const context = canvas.getContext("2d");
@@ -201,28 +213,23 @@
           context.setTransform(dpr, 0, 0, dpr, 0, 0);
           await page.render({ canvasContext: context, viewport }).promise;
           if (gen !== pdfRenderGen) return;
-          slot.replaceChildren(canvas);
-          slot.dataset.state = "done";
+          stage.replaceChildren(canvas);
         } catch (error) {
           if (gen !== pdfRenderGen) return;
-          slot.innerHTML = sheetLink(url);
-          slot.dataset.state = "fail";
+          stage.innerHTML = sheetLink(url);
         }
       };
-      pdfObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) paint(entry.target);
-          });
-        },
-        { root: pages, rootMargin: "720px 0px" }
-      );
-      slots.forEach((slot) => pdfObserver.observe(slot));
-      await paint(slots[0]);
+      prev.addEventListener("click", () => {
+        if (current > 1) showPage(current - 1);
+      });
+      next.addEventListener("click", () => {
+        if (current < pdf.numPages) showPage(current + 1);
+      });
+      await showPage(1);
     } catch (error) {
       if (gen !== pdfRenderGen || !pages.isConnected) return;
       if (!pages.querySelector("canvas")) {
-        pages.innerHTML = `<p>${esc(getDict(lang).computing.fail)}</p>${sheetLink(url)}`;
+        pages.innerHTML = `<p>${esc(dict.computing.fail)}</p>${sheetLink(url)}`;
       }
     }
   };
@@ -400,6 +407,7 @@
   const playerFab = document.getElementById("player-fab");
   const trackToggle = document.getElementById("track-toggle");
   const siteAudio = document.getElementById("site-audio");
+  let userPaused = false;
 
   const setPlaying = (on) => {
     if (playerFab) {
@@ -409,25 +417,43 @@
     if (trackToggle) trackToggle.classList.toggle("is-on", on);
   };
 
+  const tryPlay = () => {
+    if (!siteAudio || userPaused) return;
+    const played = siteAudio.play();
+    if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+  };
+
   const toggleAudio = () => {
     if (!siteAudio) return;
     if (!siteAudio.paused && !siteAudio.ended) {
+      userPaused = true;
       siteAudio.pause();
       setPlaying(false);
       return;
     }
-    const played = siteAudio.play();
-    if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+    userPaused = false;
+    tryPlay();
   };
 
   if (siteAudio) {
     siteAudio.preload = "auto";
     siteAudio.src = "assets/music/desafinado.m4a";
+    siteAudio.autoplay = true;
     siteAudio.addEventListener("playing", () => setPlaying(true));
     siteAudio.addEventListener("pause", () => setPlaying(false));
-    siteAudio.addEventListener("ended", () => setPlaying(false));
-    const started = siteAudio.play();
-    if (started) started.then(() => setPlaying(true)).catch(() => setPlaying(false));
+    siteAudio.addEventListener("ended", () => {
+      userPaused = false;
+      setPlaying(false);
+    });
+    tryPlay();
+    window.addEventListener("pageshow", tryPlay);
+    document.addEventListener(
+      "pointerdown",
+      () => {
+        if (siteAudio.paused && !userPaused) tryPlay();
+      },
+      { capture: true }
+    );
   }
   if (playerFab) playerFab.addEventListener("click", toggleAudio);
   if (trackToggle) trackToggle.addEventListener("click", toggleAudio);

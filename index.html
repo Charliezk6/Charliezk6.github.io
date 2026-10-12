@@ -16,10 +16,20 @@
   </head>
   <body>
     <canvas class="comet" aria-hidden="true"></canvas>
-    <audio id="site-audio" preload="none" hidden></audio>
-    <button type="button" class="player-fab" id="player-fab" data-i18n-aria="music.trackLabel">
-      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-    </button>
+    <audio id="site-audio" preload="auto" autoplay hidden></audio>
+    <div class="player-pop">
+      <button type="button" class="player-fab" id="player-fab" data-i18n-aria="music.trackLabel">
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </button>
+      <button type="button" class="track" id="track-toggle" data-i18n-aria="music.trackLabel">
+        <img class="track-cover" src="assets/photos/images.jpg" alt="" />
+        <span class="track-copy">
+          <span class="track-title">Desafinado</span>
+          <span class="track-artists">Stan Getz / João Gilberto / Antonio Carlos Jobim</span>
+          <span class="track-source" data-i18n="music.source">Getz/Gilberto · Verve · 1964</span>
+        </span>
+      </button>
+    </div>
     <nav class="site-nav" aria-label="Primary">
       <div class="nav-pill">
         <a class="nav-mark" href="#home">
@@ -119,14 +129,6 @@
               </figcaption>
             </figure>
           </div>
-          <button type="button" class="track" id="track-toggle" data-i18n-aria="music.trackLabel">
-            <img class="track-cover" src="assets/photos/images.jpg" alt="" />
-            <span class="track-copy">
-              <span class="track-title">Desafinado</span>
-              <span class="track-artists">Stan Getz / João Gilberto / Antonio Carlos Jobim</span>
-              <span class="track-source" data-i18n="music.source">Getz/Gilberto · Verve · 1964</span>
-            </span>
-          </button>
           <div class="journal-list music-link">
             <a
               class="journal-row"
