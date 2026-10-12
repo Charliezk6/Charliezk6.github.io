@@ -135,6 +135,26 @@
   let pdfTask = null;
   let pdfDoc = null;
   let pdfRenderGen = 0;
+  let pdfWorkerReady = null;
+
+  const ensurePdfEngine = () => {
+    const lib = window.pdfjsLib;
+    if (!lib) return Promise.reject(new Error("missing"));
+    lib.GlobalWorkerOptions.workerSrc = new URL("js/vendor/pdf.worker.min.js", document.baseURI).href;
+    if (window.pdfjsWorker && window.pdfjsWorker.WorkerMessageHandler) return Promise.resolve();
+    if (pdfWorkerReady) return pdfWorkerReady;
+    pdfWorkerReady = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "js/vendor/pdf.worker.min.js";
+      script.onload = () => resolve();
+      script.onerror = () => {
+        pdfWorkerReady = null;
+        reject(new Error("worker"));
+      };
+      document.head.appendChild(script);
+    });
+    return pdfWorkerReady;
+  };
 
   const sheetLink = (url) =>
     `<a class="sheet-open" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(getDict(lang).computing.openFile)}</a>`;
@@ -168,13 +188,17 @@
       if (!response.ok) throw new Error("missing");
       const data = await response.arrayBuffer();
       if (gen !== pdfRenderGen || !pages.isConnected) return;
+      await ensurePdfEngine();
+      if (gen !== pdfRenderGen || !pages.isConnected) return;
       const loading = window.pdfjsLib.getDocument({
         data,
-        cMapUrl: "js/vendor/cmaps/",
+        cMapUrl: new URL("js/vendor/cmaps/", document.baseURI).href,
         cMapPacked: true,
-        disableWorker: true,
         disableRange: true,
         disableStream: true,
+        disableAutoFetch: true,
+        isOffscreenCanvasSupported: false,
+        useWorkerFetch: false,
       });
       pdfTask = loading;
       const pdf = await loading.promise;
@@ -210,10 +234,10 @@
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = Math.floor(viewport.width * dpr);
           canvas.height = Math.floor(viewport.height * dpr);
+          stage.replaceChildren(canvas);
           context.setTransform(dpr, 0, 0, dpr, 0, 0);
           await page.render({ canvasContext: context, viewport }).promise;
           if (gen !== pdfRenderGen) return;
-          stage.replaceChildren(canvas);
         } catch (error) {
           if (gen !== pdfRenderGen) return;
           stage.innerHTML = sheetLink(url);
@@ -449,8 +473,10 @@
     window.addEventListener("pageshow", tryPlay);
     document.addEventListener(
       "pointerdown",
-      () => {
-        if (siteAudio.paused && !userPaused) tryPlay();
+      (event) => {
+        if (!siteAudio.paused || userPaused) return;
+        if (event.target.closest && event.target.closest(".player-pop")) return;
+        tryPlay();
       },
       { capture: true }
     );

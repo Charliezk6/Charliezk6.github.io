@@ -1870,6 +1870,7 @@ button.work-card {
 
 .pdf-pages canvas,
 .pdf-slot canvas {
+  display: block;
   width: 100%;
   height: auto;
   background: #fff;
@@ -2023,6 +2024,14 @@ button.work-card {
 .explore-float span:nth-child(12) { bottom: 22%; right: 16%; animation-delay: -2s; }
 .explore-float span:nth-child(13) { bottom: 12%; right: 30%; }
 .explore-float span:nth-child(14) { top: 48%; left: 8%; animation-delay: -6s; }
+
+#site-audio {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 
 .player-pop {
   position: fixed;
