@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
 personal photography collection/
+论文证书/
+assets/
 *.docx
 *.DNG
 *.HEIC
@@ -8,3 +10,4 @@ personal photography collection/
 .env.*
 *.md
 *.txt
+*.m4a

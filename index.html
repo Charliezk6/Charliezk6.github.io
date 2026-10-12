@@ -3,229 +3,303 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#faf9f5" />
+    <meta name="theme-color" content="#0a0a0a" />
     <title>张焜 / Kun Zhang</title>
     <meta name="description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <header class="site-header" id="top">
-      <a class="brand" href="#top">张焜</a>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#music" data-i18n="nav.music">音乐</a>
-        <a href="#computing" data-i18n="nav.computing">计算机</a>
-        <a href="#writing" data-i18n="nav.writing">写作</a>
-        <a href="#photography" data-i18n="nav.photography">摄影</a>
-      </nav>
-      <div class="header-tools">
+    <canvas class="comet" aria-hidden="true"></canvas>
+    <audio id="site-audio" preload="none" hidden></audio>
+    <button type="button" class="player-fab" id="player-fab" data-i18n-aria="music.trackLabel">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    <nav class="site-nav" aria-label="Primary">
+      <div class="nav-pill">
+        <a class="nav-mark" href="#home">
+          <span class="nav-mark-ring" aria-hidden="true"></span>
+          <span class="nav-mark-fill" aria-hidden="true"></span>
+          <span class="nav-mark-text" data-i18n="mark">张</span>
+        </a>
+        <span class="nav-rule" aria-hidden="true"></span>
+        <div class="nav-links">
+          <a href="#home" data-nav="home" data-i18n="nav.home" aria-current="page">首页</a>
+          <a href="#music" data-nav="music" data-i18n="nav.music">音乐</a>
+          <a href="#computing" data-nav="computing" data-i18n="nav.computing">计算机</a>
+          <a href="#writing" data-nav="writing" data-i18n="nav.writing">写作</a>
+          <a href="#photography" data-nav="photography" data-i18n="nav.photography">摄影</a>
+        </div>
+        <span class="nav-rule" aria-hidden="true"></span>
         <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" class="lang-chip" data-lang="zh" aria-pressed="true">中</button>
           <button type="button" class="lang-chip" data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <button type="button" class="btn-primary resume-open" data-i18n="nav.resume">履历</button>
+        <span class="hover-shell">
+          <span class="hover-ring" aria-hidden="true"></span>
+          <button type="button" class="nav-resume resume-open" data-i18n="nav.resume">履历</button>
+        </span>
       </div>
-    </header>
+    </nav>
 
     <main>
-      <section class="hero">
-        <svg
-          class="hero-art"
-          viewBox="0 0 1600 900"
-          preserveAspectRatio="xMidYMid meet"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <ellipse class="mist" cx="180" cy="160" rx="140" ry="90" />
-          <ellipse class="mist mist-soft" cx="1420" cy="740" rx="150" ry="96" />
-
-          <g class="hero-piece" data-desk="translate(210, 28)" data-phone="translate(455, 210) scale(0.64)" transform="translate(210, 28)">
-            <g class="drift">
-              <path class="draw" stroke-width="1.5" d="M168 148 C 204 108, 268 104, 296 152 C 322 200, 286 242, 232 246 C 178 248, 138 204, 168 148" />
-              <path class="draw" stroke-width="1.25" d="M160 144 C 128 128, 136 78, 198 90 C 246 64, 304 96, 296 146" />
-              <path class="draw" stroke-width="1.2" d="M214 176 C 224 168, 240 168, 248 178" />
-              <path class="draw" stroke-width="1.2" d="M260 180 C 270 172, 286 174, 292 184" />
-              <path class="draw" stroke-width="1.15" d="M250 190 242 216 260 220" />
-              <path class="draw accent" stroke-width="1.4" d="M226 232 C 240 242, 262 240, 276 230" />
-              <path class="draw" stroke-width="1.3" d="M230 246 C 234 260, 238 272, 236 286" />
-              <path class="draw" stroke-width="1.45" d="M148 300 C 196 276, 268 274, 328 304" />
-              <path class="draw" stroke-width="1.3" d="M236 286 C 228 360, 224 430, 232 508" />
-              <path class="draw" stroke-width="1.25" d="M186 318 C 200 400, 208 468, 198 508 C 228 520, 268 518, 298 500 C 288 430, 280 360, 292 318" />
-              <path class="draw" stroke-width="1.3" d="M164 304 C 118 348, 92 410, 84 468" />
-              <path class="draw" stroke-width="1.2" d="M78 464 C 66 472, 68 490, 86 486 C 96 482, 96 470, 84 468" />
-              <path class="draw" stroke-width="1.3" d="M314 306 C 368 338, 418 352, 462 338" />
-              <path class="draw" stroke-width="1.2" d="M458 332 C 448 322, 468 310, 480 322 C 492 334, 478 348, 466 340" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(-300, 36)" data-phone="translate(-140, 8) scale(0.78)" transform="translate(-300, 36)">
-            <g class="drift-late">
-              <path class="draw" stroke-width="1.5" d="M1228 168 C 1310 88, 1488 76, 1552 142 L 1516 178 C 1420 112, 1308 146, 1256 192 Z" />
-              <path class="draw" stroke-width="1.45" d="M1236 198 C 1364 128, 1524 140, 1544 206 L 1520 276 C 1396 312, 1268 292, 1242 240 Z" />
-              <path class="draw" stroke-width="1.3" d="M1258 244 1470 214 1462 248 1250 278 Z" />
-              <path class="draw" stroke-width="0.95" d="M1280 250 1274 272 M1308 246 1302 268 M1336 242 1330 264 M1364 238 1358 260 M1392 234 1386 256 M1420 230 1414 252" />
-              <path class="draw accent" stroke-width="1.3" d="M1362 238 1356 260" />
-              <path class="draw" stroke-width="1.15" d="M1284 276 1276 318 M1496 258 1506 304" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(200, 72)" data-phone="translate(468, 340) scale(0.62)" transform="translate(200, 72)">
-            <g class="drift drift-alt">
-              <path class="draw" stroke-width="1.45" d="M64 520 C 168 488, 286 480, 398 498" />
-              <path class="draw" stroke-width="1.45" d="M68 534 C 172 502, 290 494, 402 512" />
-              <path class="draw" stroke-width="1.2" d="M64 520 C 56 528, 56 528, 68 534" />
-              <path class="draw" stroke-width="1.2" d="M398 498 C 412 500, 414 510, 402 512" />
-              <path class="draw" stroke-width="1.1" d="M140 506 a 3.2 2.4 0 1 1 .2 0" />
-              <path class="draw" stroke-width="1.1" d="M198 498 a 3.2 2.4 0 1 1 .2 0" />
-              <path class="draw" stroke-width="1.1" d="M256 494 a 3.2 2.4 0 1 1 .2 0" />
-              <path class="draw" stroke-width="1.1" d="M314 492 a 3.2 2.4 0 1 1 .2 0" />
-              <path class="draw accent" stroke-width="1.45" d="M116 518 a 6.5 4.6 -12 1 1 .2 0" />
-              <path class="draw accent" stroke-width="1.15" d="M60 528 C 34 552, 24 590, 42 620" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(-390, -28)" data-phone="translate(-144, 249) scale(0.8)" transform="translate(-390, -28)">
-            <g class="drift">
-              <path class="draw" stroke-width="1.4" d="M1368 430 h148 a11 11 0 0 1 11 11 v82 a11 11 0 0 1 -11 11 h-148 a11 11 0 0 1 -11 -11 v-82 a11 11 0 0 1 11 -11 z" />
-              <path class="draw" stroke-width="1.2" d="M1418 430 v-16 h62 v16" />
-              <path class="draw" stroke-width="1.35" d="M1444 484 m -26 0 a 26 26 0 1 1 52 0 a 26 26 0 1 1 -52 0" />
-              <path class="draw" stroke-width="1.1" d="M1444 484 m -12 0 a 12 12 0 1 1 24 0 a 12 12 0 1 1 -24 0" />
-              <path class="draw accent" stroke-width="1.4" d="M1444 484 m -4.5 0 a 4.5 4.5 0 1 1 9 0 a 4.5 4.5 0 1 1 -9 0" />
-              <path class="draw accent" stroke-width="1.25" d="M1492 420 m -4.5 0 a 4.5 4.5 0 1 1 9 0 a 4.5 4.5 0 1 1 -9 0" />
-              <path class="draw" stroke-width="1.05" d="M1382 446 h22" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(-210, -64)" data-phone="translate(110, 303) scale(0.66)" transform="translate(-210, -64)">
-            <g class="drift-late">
-              <path class="draw" stroke-width="1.35" d="M1148 668 1268 654 1260 812 1136 822 Z" />
-              <path class="draw" stroke-width="1.35" d="M1268 654 1396 668 1386 826 1260 812 Z" />
-              <path class="draw" stroke-width="1.45" d="M1268 654 1260 812" />
-              <path class="draw" stroke-width="0.9" d="M1168 704 h82 M1166 728 h82 M1164 752 h80 M1162 776 h76" />
-              <path class="draw" stroke-width="0.9" d="M1282 706 h86 M1284 730 h82 M1286 754 h76" />
-              <path class="draw accent" stroke-width="1.25" d="M1368 698 C 1380 686, 1396 698, 1384 712" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(120, -36)" data-phone="translate(410, 385) scale(0.56)" transform="translate(120, -36)">
-            <g class="drift drift-alt">
-              <path class="draw" stroke-width="1.5" d="M168 812 C 268 768, 384 728, 498 696" />
-              <path class="draw" stroke-width="1.3" d="M176 822 C 276 778, 392 738, 506 706" />
-              <path class="draw" stroke-width="1.2" d="M186 804 C 284 762, 398 724, 510 694" />
-              <path class="draw" stroke-width="1.25" d="M498 696 540 678 512 712" />
-              <path class="draw accent" stroke-width="1.4" d="M544 670 C 556 660, 568 674, 554 686 C 542 694, 534 678, 544 670" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(28, -520)" data-phone="translate(470, -385) scale(0.7)" transform="translate(28, -520)">
-            <g class="drift">
-              <path class="draw" stroke-width="1.2" d="M102 668 C 96 638, 80 614, 70 602" />
-              <path class="draw" stroke-width="1.2" d="M122 672 C 118 638, 108 612, 102 598" />
-              <path class="draw" stroke-width="1.2" d="M144 672 C 152 638, 168 614, 180 602" />
-              <path class="draw" stroke-width="1.2" d="M164 668 C 174 638, 192 616, 206 606" />
-              <path class="draw accent" stroke-width="1.3" d="M100 604 C 88 590, 106 578, 114 594 C 124 582, 138 596, 122 608 C 112 618, 104 614, 100 604" />
-              <path class="draw accent" stroke-width="1.3" d="M178 604 C 166 590, 184 578, 192 594 C 202 582, 216 596, 200 608 C 190 618, 182 614, 178 604" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(-250, 620)" data-phone="translate(-110, 778) scale(0.78)" transform="translate(-250, 620)">
-            <g class="drift-late">
-              <path class="draw" stroke-width="1.15" d="M1088 168 C 1082 138, 1066 114, 1056 102" />
-              <path class="draw" stroke-width="1.15" d="M1108 172 C 1104 138, 1094 112, 1088 98" />
-              <path class="draw" stroke-width="1.15" d="M1130 172 C 1138 138, 1154 114, 1166 102" />
-              <path class="draw" stroke-width="1.15" d="M1150 168 C 1160 138, 1178 116, 1192 106" />
-              <path class="draw accent" stroke-width="1.25" d="M1086 104 C 1074 90, 1092 78, 1100 94 C 1110 82, 1124 96, 1108 108 C 1098 118, 1090 114, 1086 104" />
-              <path class="draw accent" stroke-width="1.25" d="M1164 104 C 1152 90, 1170 78, 1178 94 C 1188 82, 1202 96, 1186 108 C 1176 118, 1168 114, 1164 104" />
-            </g>
-          </g>
-
-          <g class="hero-piece" data-desk="translate(-240, 8)" data-phone="translate(110, 520) scale(0.62)" transform="translate(-240, 8)">
-            <g class="drift drift-alt">
-              <path class="draw" stroke-width="1.15" d="M1488 628 C 1482 598, 1466 574, 1456 562" />
-              <path class="draw" stroke-width="1.15" d="M1508 632 C 1504 598, 1494 572, 1488 558" />
-              <path class="draw" stroke-width="1.15" d="M1530 632 C 1538 598, 1554 574, 1566 562" />
-              <path class="draw" stroke-width="1.15" d="M1550 628 C 1560 598, 1578 576, 1592 566" />
-              <path class="draw accent" stroke-width="1.25" d="M1486 564 C 1474 550, 1492 538, 1500 554 C 1510 542, 1524 556, 1508 568 C 1498 578, 1490 574, 1486 564" />
-              <path class="draw accent" stroke-width="1.25" d="M1564 564 C 1552 550, 1570 538, 1578 554 C 1588 542, 1602 556, 1586 568 C 1576 578, 1568 574, 1564 564" />
-            </g>
-          </g>
-        </svg>
+      <section class="hero" id="home">
         <div class="hero-copy">
-          <h1>张焜</h1>
-          <p class="hero-latin">Kun Zhang</p>
-          <p class="hero-line" data-i18n="hero.line">南京审计大学审计学专业</p>
-          <div class="hero-actions">
-            <button type="button" class="btn-primary resume-open" data-i18n="nav.resume">履历</button>
-            <a class="btn-secondary-pill" href="#photography" data-i18n="nav.photography">摄影</a>
+          <p class="kicker blur-in">
+            <span class="kicker-line" aria-hidden="true"></span>
+            <span data-i18n="hero.eyebrow">南京审计大学</span>
+            <span class="kicker-line" aria-hidden="true"></span>
+          </p>
+          <h1 class="name-reveal">
+            <span class="name-zh">张焜</span>
+            <span class="name-en">Kun Zhang</span>
+          </h1>
+          <p class="hero-role lead-rise">
+            <span class="role-word" id="role-word">音乐</span><span data-i18n="hero.roleRest">，写在审计之外。</span>
+          </p>
+          <p class="hero-line lead-rise" data-i18n="hero.line">南京审计大学审计学专业</p>
+          <div class="hero-actions blur-in">
+            <span class="hover-shell">
+              <span class="hover-ring" aria-hidden="true"></span>
+              <button type="button" class="btn-fill resume-open" data-i18n="nav.resume">履历</button>
+            </span>
+            <span class="hover-shell">
+              <span class="hover-ring" aria-hidden="true"></span>
+              <a class="btn-line" href="#photography" data-i18n="nav.photography">摄影</a>
+            </span>
+          </div>
+        </div>
+        <div class="scroll-cue">
+          <span data-i18n="hero.scroll">向下</span>
+          <span class="scroll-line" aria-hidden="true"><span class="scroll-line-bar"></span></span>
+        </div>
+      </section>
+
+      <section class="band" id="music">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="kicker">
+              <span class="kicker-line" aria-hidden="true"></span>
+              <span data-i18n="music.kicker">音乐</span>
+            </p>
+            <h2 class="section-title">
+              <span data-i18n="music.titleLead">夜里另一张</span>
+              <em data-i18n="music.titleEm">书桌</em>
+            </h2>
+            <p class="section-lead" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
+          </header>
+          <div class="work-grid">
+            <figure class="work-card span-7">
+              <img class="work-photo" src="assets/music/piano.jpg" alt="" />
+              <figcaption class="work-card-body">
+                <h3 data-i18n="music.piano">钢琴</h3>
+              </figcaption>
+            </figure>
+            <figure class="work-card span-5">
+              <img class="work-photo" src="assets/music/flute.jpg" alt="" />
+              <figcaption class="work-card-body">
+                <h3 data-i18n="music.flute">竹笛</h3>
+              </figcaption>
+            </figure>
+            <figure class="work-card span-5">
+              <img class="work-photo" src="assets/music/drums.jpg" alt="" />
+              <figcaption class="work-card-body">
+                <h3 data-i18n="music.drums">架子鼓</h3>
+              </figcaption>
+            </figure>
+            <figure class="work-card span-7">
+              <img class="work-photo" src="assets/music/guitar.jpg" alt="" />
+              <figcaption class="work-card-body">
+                <h3 data-i18n="music.guitar">吉他</h3>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="journal-list music-link">
+            <a
+              class="journal-row"
+              href="https://music.163.com/#/artist?id=94272555"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="netease-mark" aria-hidden="true">
+                <svg viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="32" fill="#ec4141"></circle>
+                  <path
+                    fill="#fff"
+                    d="M40 18.5v18.2a6.2 6.2 0 1 1-4-5.8V22.2l14-3.6v16.2a6.2 6.2 0 1 1-4-5.8V16.2L40 18.5z"
+                  ></path>
+                </svg>
+              </span>
+              <span class="journal-copy">
+                <h3 data-i18n="music.link">网易云主页</h3>
+              </span>
+              <span class="row-go" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14M13 6l6 6-6 6"></path>
+                </svg>
+              </span>
+            </a>
           </div>
         </div>
       </section>
 
-      <section class="tile tile-light" id="music">
-        <div class="tile-inner">
-          <h2 data-i18n="music.title">音乐</h2>
-          <p class="lead" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
-          <a
-            class="btn-primary"
-            href="https://music.163.com/#/artist?id=94272555"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-i18n="music.link"
-            >网易云主页</a
-          >
+      <section class="band band-tight" id="computing">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="kicker">
+              <span class="kicker-line" aria-hidden="true"></span>
+              <span data-i18n="computing.kicker">计算机</span>
+            </p>
+            <div class="section-head-row">
+              <div>
+                <h2 class="section-title">
+                  <span data-i18n="computing.titleLead">数据与</span>
+                  <em data-i18n="computing.titleEm">模型</em>
+                </h2>
+                <p class="section-lead" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
+              </div>
+              <a class="pill-link" href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">
+                <span class="hover-ring" aria-hidden="true"></span>
+                <span class="pill-link-face">
+                  <span data-i18n="computing.github">GitHub</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6"></path>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </header>
+          <div class="work-grid" id="computing-list"></div>
         </div>
       </section>
 
-      <section class="tile tile-parchment" id="computing">
-        <div class="tile-inner tile-wide">
-          <h2 data-i18n="computing.title">计算机</h2>
-          <p class="lead" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
-          <div class="card-grid" id="computing-list"></div>
-          <a
-            class="btn-secondary-pill"
-            href="https://github.com/Charliezk6"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-i18n="computing.github"
-            >GitHub</a
-          >
+      <section class="band" id="writing">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="kicker">
+              <span class="kicker-line" aria-hidden="true"></span>
+              <span data-i18n="writing.kicker">写作</span>
+            </p>
+            <h2 class="section-title">
+              <span data-i18n="writing.titleLead">公众号上</span>
+              <em data-i18n="writing.titleEm">慢慢写</em>
+            </h2>
+            <p class="section-lead" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
+            <p class="wechat-name">KunKun杂谈</p>
+            <button type="button" class="copy-btn wechat-copy" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">
+              复制账号
+            </button>
+          </header>
+          <div class="journal-list" id="writing-list"></div>
         </div>
       </section>
 
-      <section class="tile tile-card" id="writing">
-        <div class="tile-inner tile-wide">
-          <h2 data-i18n="writing.title">写作</h2>
-          <p class="lead" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
-          <p class="wechat-name">KunKun杂谈</p>
-          <button type="button" class="copy-btn text-link" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">
-            复制账号
-          </button>
-          <div class="card-grid writing-grid" id="writing-list"></div>
+      <section class="explore" id="photography">
+        <div class="explore-pin">
+          <div class="explore-float" aria-hidden="true">
+            <span class="float-ring lg"></span>
+            <span class="float-ring"></span>
+            <span class="float-ring sm"></span>
+            <span class="float-dot"></span>
+            <span class="float-dot sm"></span>
+            <span class="float-dot"></span>
+            <span class="float-bar"></span>
+            <span class="float-bar short"></span>
+            <span class="float-orbit"><i></i></span>
+            <span class="float-orbit slow"><i></i></span>
+            <span class="float-ring"></span>
+            <span class="float-dot sm"></span>
+            <span class="float-bar"></span>
+            <span class="float-ring sm"></span>
+          </div>
+          <div class="explore-copy">
+            <p class="kicker">
+              <span class="kicker-line" aria-hidden="true"></span>
+              <span data-i18n="photo.kicker">摄影</span>
+              <span class="kicker-line" aria-hidden="true"></span>
+            </p>
+            <h2 class="section-title">
+              <span data-i18n="photo.titleLead">点开看</span>
+              <em data-i18n="photo.titleEm">大图</em>
+            </h2>
+            <p class="section-lead" data-i18n="photo.body">点开看大图。</p>
+          </div>
+        </div>
+        <div class="explore-stage">
+          <div class="explore-col explore-col-left" id="gallery-left"></div>
+          <div class="explore-col explore-col-right" id="gallery-right"></div>
         </div>
       </section>
 
-      <section class="tile tile-light" id="photography">
-        <div class="tile-inner tile-wide">
-          <h2 data-i18n="photo.title">摄影</h2>
-          <p class="lead" data-i18n="photo.body">点开看大图。</p>
-          <div class="gallery" id="gallery"></div>
+      <section class="band" id="facts">
+        <div class="wrap">
+          <div class="stats-grid">
+            <div class="stat">
+              <span class="stat-num" data-count="3.75" data-decimals="1">
+                <span class="stat-value">3.75</span>
+              </span>
+              <span class="stat-label" data-i18n="stats.gpa">绩点</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-count="4" data-decimals="0">
+                <span class="stat-value">4</span><span class="stat-suffix">/83</span>
+              </span>
+              <span class="stat-label" data-i18n="stats.rank">专业排名</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-count="7" data-decimals="1">
+                <span class="stat-value">7.0</span>
+              </span>
+              <span class="stat-label" data-i18n="stats.ielts">雅思</span>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p data-i18n="footer">© 2026 张焜</p>
-      <div class="footer-links">
-        <a href="mailto:13543478517@163.com">邮箱</a>
-        <a href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button type="button" class="text-link resume-open" data-i18n="nav.resume">履历</button>
+    <footer class="site-footer" id="contact">
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track" id="marquee-track"></div>
+      </div>
+      <div class="wrap footer-contact">
+        <p class="kicker footer-kicker">
+          <span class="kicker-line" aria-hidden="true"></span>
+          <span data-i18n="connect.emailLabel">邮箱</span>
+          <span class="kicker-line" aria-hidden="true"></span>
+        </p>
+        <span class="hover-shell">
+          <span class="hover-ring" aria-hidden="true"></span>
+          <a class="footer-mail" href="mailto:13543478517@163.com">
+            13543478517@163.com
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17 17 7M9 7h8v8"></path>
+            </svg>
+          </a>
+        </span>
+      </div>
+      <div class="wrap">
+        <div class="footer-bar">
+          <p data-i18n="footer">© 2026 张焜</p>
+          <a
+            class="icon-round"
+            href="https://github.com/Charliezk6"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.7 7.7 0 0 1 8 4.77c.68.003 1.36.092 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+              ></path>
+            </svg>
+          </a>
+        </div>
       </div>
     </footer>
 
@@ -267,6 +341,20 @@
       </div>
     </dialog>
 
+    <dialog class="dossier" id="dossier">
+      <div class="dossier-bar">
+        <div>
+          <p class="kicker">
+            <span class="kicker-line" aria-hidden="true"></span>
+            <span id="dossier-kicker">论文与证书</span>
+          </p>
+          <h2 id="dossier-title"></h2>
+        </div>
+        <button type="button" class="dossier-close" aria-label="关闭">×</button>
+      </div>
+      <div class="dossier-stage" id="dossier-stage"></div>
+    </dialog>
+
     <div class="lightbox" id="lightbox" hidden>
       <button type="button" class="icon-btn lightbox-close" aria-label="Close">×</button>
       <button type="button" class="icon-btn lightbox-prev" aria-label="Previous">‹</button>
@@ -276,9 +364,11 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+    <script src="js/vendor/pdf.min.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/photos.js"></script>
+    <script src="js/motion.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
