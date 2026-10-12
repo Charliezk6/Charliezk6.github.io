@@ -2,7 +2,6 @@
 Thumbs.db
 personal photography collection/
 论文证书/
-assets/
 *.docx
 *.DNG
 *.HEIC
@@ -11,3 +10,4 @@ assets/
 *.md
 *.txt
 *.m4a
+!assets/music/desafinado.m4a

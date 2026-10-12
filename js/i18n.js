@@ -28,7 +28,8 @@ window.I18N = {
       flute: "竹笛",
       drums: "架子鼓",
       guitar: "吉他",
-      trackLabel: "播放 Desafinado",
+      trackLabel: "播放或暂停 Desafinado",
+      source: "Getz/Gilberto · Verve · 1964",
     },
     computing: {
       title: "计算机",
@@ -219,7 +220,8 @@ window.I18N = {
       flute: "Bamboo flute",
       drums: "Drum kit",
       guitar: "Guitar",
-      trackLabel: "Play Desafinado",
+      trackLabel: "Play or pause Desafinado",
+      source: "Getz/Gilberto · Verve · 1964",
     },
     computing: {
       title: "Computing",

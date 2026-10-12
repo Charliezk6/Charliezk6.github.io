@@ -46,15 +46,15 @@
 
   const DOCS = [
     [
-      { kind: "pdf", src: "论文证书/2025apmcm亚太杯（国一）/基于机器学习算法的三疾病风险预测模型构建及共病特征解析.pdf" },
-      { kind: "pdf", src: "论文证书/2025apmcm亚太杯（国一）/国一证书.pdf" },
+      { kind: "pdf", src: "assets/docs/apmcm-paper.pdf" },
+      { kind: "pdf", src: "assets/docs/apmcm-award.pdf" },
     ],
     [
-      { kind: "pdf", src: "论文证书/2025华数杯/CCM2503945.pdf" },
-      { kind: "image", src: "论文证书/2025华数杯/国三证书.png" },
+      { kind: "pdf", src: "assets/docs/huashu-paper.pdf" },
+      { kind: "image", src: "assets/docs/huashu-award.png" },
     ],
     [
-      { kind: "pdf", src: "论文证书/大语言模型/狗熊会项目证明.pdf" },
+      { kind: "pdf", src: "assets/docs/xiong-award.pdf" },
       {
         kind: "archive",
         src: "论文证书/大语言模型/智审通.mhtml",
@@ -116,10 +116,6 @@
         const keys = (item.files || [])
           .map((file, fileIndex) => {
             const label = file.role === "archive" ? file.name : dict.computing[file.role] || file.name;
-            const doc = DOCS[index] && DOCS[index][fileIndex];
-            if (doc && (file.role === "paper" || doc.src.includes("狗熊会"))) {
-              return `<a class="doc-key" href="${esc(fileHref(doc.src))}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
-            }
             return `<button type="button" class="doc-key" data-doc="${index}" data-file="${fileIndex}">${esc(label)}</button>`;
           })
           .join("");
@@ -137,34 +133,97 @@
   };
 
   let pdfTask = null;
+  let pdfObserver = null;
+  let pdfRenderGen = 0;
+
+  const sheetLink = (url) =>
+    `<a class="sheet-open" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(getDict(lang).computing.openFile)}</a>`;
+
+  const stopPdf = () => {
+    pdfRenderGen += 1;
+    if (pdfObserver) {
+      pdfObserver.disconnect();
+      pdfObserver = null;
+    }
+    if (pdfTask) {
+      const task = pdfTask;
+      pdfTask = null;
+      try {
+        task.destroy();
+      } catch (error) {
+        /* already closed */
+      }
+    }
+  };
 
   const renderPdf = async (url) => {
     const pages = document.getElementById("pdf-pages");
     if (!pages) return;
+    stopPdf();
+    const gen = pdfRenderGen;
     if (!window.pdfjsLib) {
-      pages.innerHTML = `<a class="sheet-open" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(getDict(lang).computing.openFile)}</a>`;
+      pages.innerHTML = sheetLink(url);
       return;
     }
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = "js/vendor/pdf.worker.min.js";
     try {
-      if (pdfTask) pdfTask.destroy();
-      pdfTask = window.pdfjsLib.getDocument(url);
-      const pdf = await pdfTask.promise;
+      const loading = window.pdfjsLib.getDocument({
+        url,
+        cMapUrl: "js/vendor/cmaps/",
+        cMapPacked: true,
+      });
+      pdfTask = loading;
+      const pdf = await loading.promise;
+      if (gen !== pdfRenderGen || !pages.isConnected) return;
       pages.innerHTML = "";
-      const width = Math.max(pages.clientWidth - 24, 280);
+      const maxCss = Math.min(Math.max(pages.clientWidth - 24, 280), 920);
+      const slots = [];
       for (let i = 1; i <= pdf.numPages; i += 1) {
-        const page = await pdf.getPage(i);
-        const base = page.getViewport({ scale: 1 });
-        const viewport = page.getViewport({ scale: width / base.width });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-        pages.appendChild(canvas);
-        await page.render({ canvasContext: context, viewport }).promise;
+        const slot = document.createElement("div");
+        slot.className = "pdf-slot";
+        slot.dataset.page = String(i);
+        pages.appendChild(slot);
+        slots.push(slot);
       }
+      const paint = async (slot) => {
+        if (gen !== pdfRenderGen || slot.dataset.state) return;
+        slot.dataset.state = "busy";
+        try {
+          const page = await pdf.getPage(Number(slot.dataset.page));
+          if (gen !== pdfRenderGen) return;
+          const base = page.getViewport({ scale: 1 });
+          const viewport = page.getViewport({ scale: Math.min(maxCss / base.width, 1.5) });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(viewport.width * dpr);
+          canvas.height = Math.floor(viewport.height * dpr);
+          context.setTransform(dpr, 0, 0, dpr, 0, 0);
+          await page.render({ canvasContext: context, viewport }).promise;
+          if (gen !== pdfRenderGen) return;
+          slot.replaceChildren(canvas);
+          slot.dataset.state = "done";
+        } catch (error) {
+          if (gen !== pdfRenderGen) return;
+          slot.innerHTML = sheetLink(url);
+          slot.dataset.state = "fail";
+        }
+      };
+      pdfObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) paint(entry.target);
+          });
+        },
+        { root: pages, rootMargin: "720px 0px" }
+      );
+      slots.forEach((slot) => pdfObserver.observe(slot));
+      await paint(slots[0]);
     } catch (error) {
-      pages.innerHTML = `<p>${esc(getDict(lang).computing.fail)}</p><a class="sheet-open" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(getDict(lang).computing.openFile)}</a>`;
+      if (gen !== pdfRenderGen || !pages.isConnected) return;
+      if (!pages.querySelector("canvas")) {
+        pages.innerHTML = `<p>${esc(getDict(lang).computing.fail)}</p>${sheetLink(url)}`;
+      }
     }
   };
 
@@ -199,6 +258,7 @@
   };
 
   const closeDossier = () => {
+    stopPdf();
     if (!dossierEl) return;
     if (typeof dossierEl.close === "function" && dossierEl.open) dossierEl.close();
     else dossierEl.removeAttribute("open");
@@ -338,25 +398,39 @@
   };
 
   const playerFab = document.getElementById("player-fab");
+  const trackToggle = document.getElementById("track-toggle");
   const siteAudio = document.getElementById("site-audio");
-  if (siteAudio) {
-    siteAudio.src = "assets/music/desafinado.m4a";
-  }
 
   const setPlaying = (on) => {
-    if (!playerFab) return;
-    playerFab.classList.toggle("is-on", on);
+    if (playerFab) {
+      playerFab.classList.toggle("is-on", on);
+      playerFab.setAttribute("aria-pressed", String(on));
+    }
+    if (trackToggle) trackToggle.classList.toggle("is-on", on);
   };
 
-  if (playerFab && siteAudio) {
-    playerFab.addEventListener("click", () => {
-      if (!siteAudio.paused && !siteAudio.ended) return;
-      const played = siteAudio.play();
-      if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
-    });
+  const toggleAudio = () => {
+    if (!siteAudio) return;
+    if (!siteAudio.paused && !siteAudio.ended) {
+      siteAudio.pause();
+      setPlaying(false);
+      return;
+    }
+    const played = siteAudio.play();
+    if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+  };
+
+  if (siteAudio) {
+    siteAudio.preload = "auto";
+    siteAudio.src = "assets/music/desafinado.m4a";
     siteAudio.addEventListener("playing", () => setPlaying(true));
+    siteAudio.addEventListener("pause", () => setPlaying(false));
     siteAudio.addEventListener("ended", () => setPlaying(false));
+    const started = siteAudio.play();
+    if (started) started.then(() => setPlaying(true)).catch(() => setPlaying(false));
   }
+  if (playerFab) playerFab.addEventListener("click", toggleAudio);
+  if (trackToggle) trackToggle.addEventListener("click", toggleAudio);
 
   document.querySelectorAll("button[data-lang]").forEach((btn) => {
     btn.addEventListener("click", () => applyLang(btn.dataset.lang));
