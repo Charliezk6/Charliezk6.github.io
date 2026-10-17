@@ -9,14 +9,36 @@
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/fonts.css" />
     <link rel="stylesheet" href="/css/styles.css" />
+    <script>
+      try {
+        if (localStorage.getItem("kz-lang") === "en") document.documentElement.lang = "en";
+      } catch (error) {
+        /* storage unavailable */
+      }
+    </script>
   </head>
   <body>
     <main class="missing">
       <p class="kicker">404</p>
-      <h1 class="display">这一页不在暗房里</h1>
-      <p class="missing-en display">This page is not in the darkroom.</p>
-      <p class="missing-note">地址可能写错了，或者这帧已经取下。<br />The address may be wrong, or the print has been taken down.</p>
-      <a class="btn-fill" href="/">回到首页 · Home</a>
+      <h1 class="display" data-i18n="missing.title">这一页走丢了</h1>
+      <p class="missing-note" data-i18n="missing.body">地址可能写错了，或者这页已经不在。</p>
+      <a class="btn-fill" href="/" data-i18n="missing.home">回到首页</a>
     </main>
+    <script src="/js/i18n.js"></script>
+    <script>
+      (function () {
+        var lang = document.documentElement.lang === "en" ? "en" : "zh";
+        var dict = (window.I18N && (window.I18N[lang] || window.I18N.zh)) || null;
+        if (!dict) return;
+        document.title = "404 · " + (lang === "en" ? "Kun Zhang" : "张焜");
+        document.querySelectorAll("[data-i18n]").forEach(function (el) {
+          var value = dict;
+          el.getAttribute("data-i18n").split(".").forEach(function (key) {
+            value = value && value[key];
+          });
+          if (typeof value === "string") el.textContent = value;
+        });
+      })();
+    </script>
   </body>
 </html>

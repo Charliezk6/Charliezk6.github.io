@@ -33,8 +33,22 @@
   const siteAudio = document.getElementById("site-audio");
 
   const getDict = (value) => window.I18N[value] || window.I18N.zh;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  let lang = stored === "en" || stored === "zh" ? stored : "zh";
+  const readStoredLang = () => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored === "en" || stored === "zh" ? stored : "zh";
+    } catch (error) {
+      return "zh";
+    }
+  };
+  const writeStoredLang = (value) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch (error) {
+      /* storage unavailable */
+    }
+  };
+  let lang = readStoredLang();
   let photoIndex = 0;
   let lastFocus = null;
   let audioReady = false;
@@ -110,14 +124,14 @@
   };
 
   const renderComputing = (dict) => {
-    const spans = ["span-7", "span-5", "span-12"];
     const covers = [
-      "assets/computing/modeling.webp",
-      "assets/computing/lighting.webp",
-      "assets/computing/llm.webp",
+      { src: "assets/computing/modeling.webp", w: 1152, h: 864 },
+      { src: "assets/computing/lighting.webp", w: 1152, h: 864 },
+      { src: "assets/computing/llm.webp", w: 1280, h: 720, wide: true },
     ];
     computingEl.innerHTML = dict.computing.items
       .map((item, index) => {
+        const cover = covers[index] || covers[0];
         const keys = (item.files || [])
           .map((file, fileIndex) => {
             const label = file.href ? file.name : dict.computing[file.role] || file.name;
@@ -128,8 +142,8 @@
           })
           .join("");
         return `
-      <article class="work-card ${spans[index] || "span-12"}">
-        <img class="work-photo" src="${esc(covers[index])}" alt="${esc(item.alt || "")}" width="1280" height="720" loading="lazy" decoding="async" />
+      <article class="work-card${cover.wide ? " is-cinema" : ""}">
+        <img class="work-photo" src="${esc(cover.src)}" alt="${esc(item.alt || "")}" width="${cover.w}" height="${cover.h}" loading="lazy" decoding="async" />
         <div class="work-card-body">
           <h3>${esc(item.title)}</h3>
           <p>${esc(item.detail)}</p>
@@ -356,9 +370,123 @@
     if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
   };
 
+  const heroFrame = document.getElementById("hero-frame");
+  const heroSlides = [document.getElementById("hero-slide-a"), document.getElementById("hero-slide-b")];
+  const heroSheetBack = document.getElementById("hero-sheet-back");
+  const heroSheetMid = document.getElementById("hero-sheet-mid");
+  const heroPlate = document.getElementById("hero-plate");
+  const heroCaption = document.getElementById("hero-caption");
+  let heroIndex = 13;
+  let heroSlot = 0;
+  let heroTimer = 0;
+  let heroPaused = false;
+  let heroReady = false;
+
+  const heroMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)");
+  const photoAt = (offset) => {
+    const photos = window.PHOTOS || [];
+    if (!photos.length) return null;
+    const index = (heroIndex + offset + photos.length) % photos.length;
+    return { photo: photos[index], index };
+  };
+  const photoAlt = (photo) => photo?.alt?.[lang] || photo?.alt?.zh || "";
+
+  const paintHero = (animate) => {
+    const photos = window.PHOTOS || [];
+    if (!photos.length || !heroSlides[0]) return;
+    heroIndex = (heroIndex + photos.length) % photos.length;
+    const current = photos[heroIndex];
+    const alt = photoAlt(current);
+    const incoming = heroSlides[heroSlot];
+    const outgoing = heroSlides[1 - heroSlot];
+    incoming.src = current.src;
+    incoming.width = current.w;
+    incoming.height = current.h;
+    incoming.alt = alt;
+    outgoing.alt = "";
+    if (!animate || heroMotion().matches) {
+      incoming.classList.add("is-current");
+      outgoing.classList.remove("is-current");
+    } else {
+      incoming.classList.remove("is-current");
+      void incoming.offsetWidth;
+      incoming.classList.add("is-current");
+      outgoing.classList.remove("is-current");
+      if (heroFrame) {
+        heroFrame.classList.add("is-turning");
+        window.setTimeout(() => heroFrame.classList.remove("is-turning"), 700);
+      }
+    }
+    heroSlot = 1 - heroSlot;
+    const next = photoAt(1);
+    const prev = photoAt(-1);
+    if (heroSheetBack && prev) heroSheetBack.src = prev.photo.thumb;
+    if (heroSheetMid && next) heroSheetMid.src = next.photo.thumb;
+    if (heroPlate) heroPlate.textContent = `${String(heroIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
+    if (heroCaption) heroCaption.textContent = alt;
+    if (next) {
+      const preload = new Image();
+      preload.src = next.photo.src;
+    }
+    heroReady = true;
+  };
+
+  const stopHero = () => window.clearInterval(heroTimer);
+  const startHero = () => {
+    stopHero();
+    if (heroPaused || heroMotion().matches) return;
+    heroTimer = window.setInterval(() => {
+      heroIndex += 1;
+      paintHero(true);
+    }, 5000);
+  };
+  const stepHero = (delta) => {
+    heroIndex += delta;
+    paintHero(true);
+    startHero();
+  };
+
+  if (heroFrame) {
+    heroFrame.addEventListener("pointerenter", () => {
+      heroPaused = true;
+      stopHero();
+    });
+    heroFrame.addEventListener("pointerleave", () => {
+      heroPaused = false;
+      startHero();
+    });
+    heroFrame.addEventListener("focusin", () => {
+      heroPaused = true;
+      stopHero();
+    });
+    heroFrame.addEventListener("focusout", (event) => {
+      if (heroFrame.contains(event.relatedTarget)) return;
+      heroPaused = false;
+      startHero();
+    });
+    let swipeX = null;
+    heroFrame.addEventListener("pointerdown", (event) => {
+      if (event.target.closest("button")) return;
+      swipeX = event.clientX;
+    });
+    heroFrame.addEventListener("pointerup", (event) => {
+      if (swipeX == null) return;
+      const delta = event.clientX - swipeX;
+      swipeX = null;
+      if (Math.abs(delta) < 42) return;
+      stepHero(delta < 0 ? 1 : -1);
+    });
+    document.getElementById("hero-prev")?.addEventListener("click", () => stepHero(-1));
+    document.getElementById("hero-next")?.addEventListener("click", () => stepHero(1));
+    heroMotion().addEventListener("change", () => {
+      paintHero(false);
+      startHero();
+    });
+  }
+
   const applyLang = (next) => {
     lang = next;
-    localStorage.setItem(STORAGE_KEY, lang);
+    writeStoredLang(lang);
     const dict = getDict(lang);
     root.lang = lang === "en" ? "en" : "zh-CN";
     const title = lang === "en" ? "Kun Zhang / 张焜" : "张焜 / Kun Zhang";
@@ -413,6 +541,16 @@
     renderTimeline(dict.resume.path);
     renderResearch(dict.resume.research);
     renderGallery(dict);
+    const wechatCopy = document.getElementById("wechat-copy");
+    if (wechatCopy && dict.writing.account) wechatCopy.dataset.copy = dict.writing.account;
+    if (!heroReady) paintHero(false);
+    else if (heroCaption) {
+      const current = (window.PHOTOS || [])[heroIndex];
+      const alt = photoAlt(current);
+      document.querySelector(".hero-slide.is-current")?.setAttribute("alt", alt);
+      heroCaption.textContent = alt;
+    }
+    startHero();
     setPlaying(siteAudio ? !siteAudio.paused && !siteAudio.ended && audioReady : false);
     if (window.SiteMotion) window.SiteMotion.mount(() => getDict(lang));
   };
@@ -566,6 +704,11 @@
     }
     if (event.key === "Escape" && resumeEl.open) closeResume();
     if (event.key === "Escape" && dossierEl && dossierEl.open) closeDossier();
+    const typing = event.target && (event.target.closest("input, textarea") || event.target.isContentEditable);
+    if (!typing && lightbox.hidden && !(dossierEl && dossierEl.open) && !(resumeEl && resumeEl.open)) {
+      if (event.key === "ArrowLeft") stepHero(-1);
+      if (event.key === "ArrowRight") stepHero(1);
+    }
     if (dossierEl && dossierEl.open && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
       const control = document.getElementById(event.key === "ArrowLeft" ? "pdf-prev" : "pdf-next");
       if (control && !control.disabled) control.click();
