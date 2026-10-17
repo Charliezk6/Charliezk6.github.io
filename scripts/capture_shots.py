@@ -33,6 +33,26 @@ def shoot(page, origin, label):
                 problems.append(f"horizontal scroll {label} {lang} {width}: {box}")
 
 
+def slide_src(page):
+    return page.evaluate(
+        """() => {
+          const current = document.querySelector('.hero-slide.is-current');
+          return current ? (current.currentSrc || current.src) : '';
+        }"""
+    )
+
+
+def visible_slides(page):
+    return page.evaluate(
+        """() => [...document.querySelectorAll('.hero-slide')].filter(
+          (slide) => getComputedStyle(slide).opacity !== '0'
+        ).map((slide) => ({
+          current: slide.classList.contains('is-current'),
+          src: slide.currentSrc || slide.src
+        }))"""
+    )
+
+
 def main():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
@@ -48,19 +68,33 @@ def main():
         page.set_viewport_size({"width": 1440, "height": 960})
         page.emulate_media(reduced_motion="reduce")
         prepare(page, AFTER, "zh")
-        first = page.locator("#hero-plate").inner_text()
+        first = slide_src(page)
         page.wait_for_timeout(6200)
-        second = page.locator("#hero-plate").inner_text()
+        second = slide_src(page)
         if first != second:
             problems.append(f"reduced motion still advanced: {first} -> {second}")
+        page.click("#hero-next")
+        page.click("#hero-next")
+        page.wait_for_timeout(200)
+        shown = visible_slides(page)
+        if len(shown) != 1 or not shown[0]["current"] or shown[0]["src"] != slide_src(page):
+            problems.append(f"reduced motion slide mismatch: {shown}")
+        page.screenshot(path=str(OUT / "after-reduced-motion.png"))
 
         page.emulate_media(reduced_motion="no-preference")
         prepare(page, AFTER, "zh")
-        first = page.locator("#hero-plate").inner_text()
+        first = slide_src(page)
         page.wait_for_timeout(6200)
-        second = page.locator("#hero-plate").inner_text()
+        second = slide_src(page)
         if first == second:
             problems.append(f"carousel did not advance: {first}")
+
+        page.locator("#facts").scroll_into_view_if_needed()
+        page.wait_for_timeout(400)
+        parked = slide_src(page)
+        page.wait_for_timeout(6200)
+        if slide_src(page) != parked:
+            problems.append("carousel kept running off-screen")
 
         page.screenshot(path=str(OUT / "after-zh-1440-music.png"), full_page=False)
         page.locator("#music").scroll_into_view_if_needed()

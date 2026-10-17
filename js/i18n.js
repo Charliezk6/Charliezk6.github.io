@@ -110,6 +110,7 @@ window.I18N = {
       close: "关闭",
       prev: "上一张",
       next: "下一张",
+      carousel: "照片轮播",
     },
     stats: { gpa: "绩点", rank: "专业排名", rankSuffix: " / 83", ielts: "雅思" },
     resume: {
@@ -238,7 +239,7 @@ window.I18N = {
       kicker: "02  —  Computing",
       titleLead: "Order,",
       titleEm: "out of noise",
-      body: "Python for samples, fitted models, and the occasional agent that can actually do a job.",
+      body: "Python for samples, fitted models, and a small agent that does useful work.",
       github: "GitHub",
       dossierKicker: "Paper and certificate",
       close: "Close",
@@ -251,7 +252,7 @@ window.I18N = {
       fail: "This file did not open in the page.",
       items: [
         {
-          title: "Asia-Pacific Mathematical Modeling",
+          title: "Asia-Pacific modeling",
           detail: "National first prize, as team lead. 6,446 medical records, and a combined risk model for three diseases.",
           alt: "Charts on glass panels, and a rack of vials on a lab bench",
           files: [
@@ -273,7 +274,7 @@ window.I18N = {
           detail: "A Qwen retrieval app, and an audit agent that worked through 643 asset tasks.",
           alt: "A laptop at night, a waveform on the screen, papers stacked beside it",
           files: [
-            { role: "award", name: "Gouxionghui certificate" },
+            { role: "award", name: "狗熊会 · Gouxionghui" },
             { role: "agent", name: "Zhishentong", href: "https://www.tongyi.com/discover/chat?agentId=A-92285-b5558f41&type=MyAgent" },
           ],
         },
@@ -301,6 +302,7 @@ window.I18N = {
       close: "Close",
       prev: "Previous",
       next: "Next",
+      carousel: "Photograph carousel",
     },
     stats: { gpa: "GPA", rank: "Class rank", rankSuffix: " / 83", ielts: "IELTS" },
     resume: {
@@ -350,7 +352,7 @@ window.I18N = {
         {
           tag: "94.62 / 100",
           title: "Language models and data analysis",
-          meta: "Gouxionghui online practicum",
+          meta: "狗熊会 · Gouxionghui practicum",
           detail: "A retrieval app on Qwen, and an audit agent for 643 asset-processing tasks.",
         },
         {

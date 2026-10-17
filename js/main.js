@@ -143,7 +143,9 @@
           .join("");
         return `
       <article class="work-card${cover.wide ? " is-cinema" : ""}">
-        <img class="work-photo" src="${esc(cover.src)}" alt="${esc(item.alt || "")}" width="${cover.w}" height="${cover.h}" loading="lazy" decoding="async" />
+        <div class="work-media">
+          <img class="work-photo" src="${esc(cover.src)}" alt="${esc(item.alt || "")}" width="${cover.w}" height="${cover.h}" loading="lazy" decoding="async" />
+        </div>
         <div class="work-card-body">
           <h3>${esc(item.title)}</h3>
           <p>${esc(item.detail)}</p>
@@ -374,15 +376,16 @@
   const heroSlides = [document.getElementById("hero-slide-a"), document.getElementById("hero-slide-b")];
   const heroSheetBack = document.getElementById("hero-sheet-back");
   const heroSheetMid = document.getElementById("hero-sheet-mid");
-  const heroPlate = document.getElementById("hero-plate");
-  const heroCaption = document.getElementById("hero-caption");
   let heroIndex = 13;
   let heroSlot = 0;
   let heroTimer = 0;
   let heroPaused = false;
   let heroReady = false;
+  let heroInView = true;
+  let heroTabVisible = document.visibilityState !== "hidden";
 
   const heroMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)");
+  const heroCompact = window.matchMedia("(max-width: 759px)");
   const photoAt = (offset) => {
     const photos = window.PHOTOS || [];
     if (!photos.length) return null;
@@ -390,6 +393,18 @@
     return { photo: photos[index], index };
   };
   const photoAlt = (photo) => photo?.alt?.[lang] || photo?.alt?.zh || "";
+
+  const setSlideSource = (img, photo) => {
+    if (heroCompact.matches) {
+      img.sizes = "100vw";
+      img.srcset = `${photo.thumb} 900w`;
+      img.src = photo.thumb;
+      return;
+    }
+    img.sizes = "26rem";
+    img.srcset = `${photo.src} ${photo.w}w`;
+    img.src = photo.src;
+  };
 
   const paintHero = (animate) => {
     const photos = window.PHOTOS || [];
@@ -399,11 +414,13 @@
     const alt = photoAlt(current);
     const incoming = heroSlides[heroSlot];
     const outgoing = heroSlides[1 - heroSlot];
-    incoming.src = current.src;
+    setSlideSource(incoming, current);
     incoming.width = current.w;
     incoming.height = current.h;
     incoming.alt = alt;
+    incoming.removeAttribute("aria-hidden");
     outgoing.alt = "";
+    outgoing.setAttribute("aria-hidden", "true");
     if (!animate || heroMotion().matches) {
       incoming.classList.add("is-current");
       outgoing.classList.remove("is-current");
@@ -422,19 +439,18 @@
     const prev = photoAt(-1);
     if (heroSheetBack && prev) heroSheetBack.src = prev.photo.thumb;
     if (heroSheetMid && next) heroSheetMid.src = next.photo.thumb;
-    if (heroPlate) heroPlate.textContent = `${String(heroIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
-    if (heroCaption) heroCaption.textContent = alt;
     if (next) {
       const preload = new Image();
-      preload.src = next.photo.src;
+      preload.src = heroCompact.matches ? next.photo.thumb : next.photo.src;
     }
     heroReady = true;
   };
 
   const stopHero = () => window.clearInterval(heroTimer);
+  const heroMayRun = () => !heroPaused && heroInView && heroTabVisible && !heroMotion().matches;
   const startHero = () => {
     stopHero();
-    if (heroPaused || heroMotion().matches) return;
+    if (!heroMayRun()) return;
     heroTimer = window.setInterval(() => {
       heroIndex += 1;
       paintHero(true);
@@ -481,6 +497,26 @@
     heroMotion().addEventListener("change", () => {
       paintHero(false);
       startHero();
+    });
+    heroCompact.addEventListener("change", () => {
+      if (heroReady) paintHero(false);
+    });
+    if ("IntersectionObserver" in window) {
+      const heroWatch = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          heroInView = Boolean(entry && entry.isIntersecting && entry.intersectionRatio >= 0.35);
+          if (heroInView) startHero();
+          else stopHero();
+        },
+        { threshold: [0, 0.35, 0.6] }
+      );
+      heroWatch.observe(heroFrame);
+    }
+    document.addEventListener("visibilitychange", () => {
+      heroTabVisible = document.visibilityState !== "hidden";
+      if (heroTabVisible) startHero();
+      else stopHero();
     });
   }
 
@@ -544,11 +580,9 @@
     const wechatCopy = document.getElementById("wechat-copy");
     if (wechatCopy && dict.writing.account) wechatCopy.dataset.copy = dict.writing.account;
     if (!heroReady) paintHero(false);
-    else if (heroCaption) {
+    else {
       const current = (window.PHOTOS || [])[heroIndex];
-      const alt = photoAlt(current);
-      document.querySelector(".hero-slide.is-current")?.setAttribute("alt", alt);
-      heroCaption.textContent = alt;
+      document.querySelector(".hero-slide.is-current")?.setAttribute("alt", photoAlt(current));
     }
     startHero();
     setPlaying(siteAudio ? !siteAudio.paused && !siteAudio.ended && audioReady : false);
@@ -705,9 +739,16 @@
     if (event.key === "Escape" && resumeEl.open) closeResume();
     if (event.key === "Escape" && dossierEl && dossierEl.open) closeDossier();
     const typing = event.target && (event.target.closest("input, textarea") || event.target.isContentEditable);
-    if (!typing && lightbox.hidden && !(dossierEl && dossierEl.open) && !(resumeEl && resumeEl.open)) {
-      if (event.key === "ArrowLeft") stepHero(-1);
-      if (event.key === "ArrowRight") stepHero(1);
+    const modalOpen =
+      !lightbox.hidden ||
+      (dossierEl && dossierEl.open) ||
+      (resumeEl && resumeEl.open) ||
+      document.body.classList.contains("is-menu");
+    if (!typing && heroInView && !modalOpen) {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        stepHero(event.key === "ArrowLeft" ? -1 : 1);
+      }
     }
     if (dossierEl && dossierEl.open && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
       const control = document.getElementById(event.key === "ArrowLeft" ? "pdf-prev" : "pdf-next");

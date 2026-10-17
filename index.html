@@ -106,23 +106,19 @@
               <a class="btn-line" href="#photography" data-i18n="hero.photos">拾光</a>
             </div>
           </div>
-          <figure class="hero-frame" id="hero-frame" tabindex="0" aria-roledescription="carousel">
+          <figure class="hero-frame" id="hero-frame" tabindex="0" aria-roledescription="carousel" data-i18n-aria="photo.carousel" aria-label="照片轮播">
             <div class="hero-papers">
-              <img class="hero-sheet hero-sheet-back" id="hero-sheet-back" alt="" />
-              <img class="hero-sheet hero-sheet-mid" id="hero-sheet-mid" alt="" />
+              <img class="hero-sheet hero-sheet-back" id="hero-sheet-back" alt="" aria-hidden="true" />
+              <img class="hero-sheet hero-sheet-mid" id="hero-sheet-mid" alt="" aria-hidden="true" />
               <div class="hero-stage">
                 <img class="hero-slide is-current" id="hero-slide-a" alt="" width="1350" height="1800" />
-                <img class="hero-slide" id="hero-slide-b" alt="" width="1350" height="1800" />
+                <img class="hero-slide" id="hero-slide-b" alt="" aria-hidden="true" width="1350" height="1800" />
                 <div class="hero-controls">
                   <button type="button" class="hero-step" id="hero-prev" data-i18n-aria="photo.prev" aria-label="上一张">‹</button>
                   <button type="button" class="hero-step" id="hero-next" data-i18n-aria="photo.next" aria-label="下一张">›</button>
                 </div>
               </div>
             </div>
-            <figcaption class="hero-caption">
-              <span class="hero-plate" id="hero-plate"></span>
-              <span id="hero-caption"></span>
-            </figcaption>
           </figure>
         </div>
         <p class="scroll-cue">
@@ -138,26 +134,23 @@
               <span class="kicker-line" aria-hidden="true"></span>
               <span data-i18n="music.kicker">壹 · 音乐</span>
             </p>
-            <h2 class="section-title display">
-              <span data-i18n="music.titleLead">一口气息，</span>
-              <em data-i18n="music.titleEm">一段和弦</em>
-            </h2>
+            <h2 class="section-title display"><span data-i18n="music.titleLead">一口气息，</span><em data-i18n="music.titleEm">一段和弦</em></h2>
             <p class="section-lead" data-i18n="music.body">网易云认证校园音乐人，竹笛专业十级。气息给竹笛，和弦给编曲。</p>
           </header>
           <div class="work-grid music-grid">
-            <figure class="work-card span-7">
+            <figure class="work-card">
               <img class="work-photo" src="assets/music/piano.webp" alt="" data-i18n-alt="music.altPiano" width="1152" height="864" loading="lazy" decoding="async" />
               <figcaption class="work-card-body"><h3 data-i18n="music.piano">钢琴</h3></figcaption>
             </figure>
-            <figure class="work-card span-5">
+            <figure class="work-card">
               <img class="work-photo" src="assets/music/flute.webp" alt="" data-i18n-alt="music.altFlute" width="1152" height="864" loading="lazy" decoding="async" />
               <figcaption class="work-card-body"><h3 data-i18n="music.flute">竹笛</h3></figcaption>
             </figure>
-            <figure class="work-card span-5">
+            <figure class="work-card">
               <img class="work-photo" src="assets/music/drums.webp" alt="" data-i18n-alt="music.altDrums" width="1152" height="864" loading="lazy" decoding="async" />
               <figcaption class="work-card-body"><h3 data-i18n="music.drums">架子鼓</h3></figcaption>
             </figure>
-            <figure class="work-card span-7">
+            <figure class="work-card">
               <img class="work-photo" src="assets/music/guitar.webp" alt="" data-i18n-alt="music.altGuitar" width="1152" height="864" loading="lazy" decoding="async" />
               <figcaption class="work-card-body"><h3 data-i18n="music.guitar">吉他</h3></figcaption>
             </figure>
@@ -188,10 +181,7 @@
             </p>
             <div class="section-head-row">
               <div>
-                <h2 class="section-title display">
-                  <span data-i18n="computing.titleLead">在噪声里，</span>
-                  <em data-i18n="computing.titleEm">找秩序</em>
-                </h2>
+                <h2 class="section-title display"><span data-i18n="computing.titleLead">在噪声里，</span><em data-i18n="computing.titleEm">找秩序</em></h2>
                 <p class="section-lead" data-i18n="computing.body">用 Python 整理样本、拟合模型，也做一点能干活的智能体。</p>
               </div>
               <a class="pill-link" href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">
@@ -211,10 +201,7 @@
               <span class="kicker-line" aria-hidden="true"></span>
               <span data-i18n="writing.kicker">叁 · 写作</span>
             </p>
-            <h2 class="section-title display">
-              <span data-i18n="writing.titleLead">写给还没</span>
-              <em data-i18n="writing.titleEm">散场的人</em>
-            </h2>
+            <h2 class="section-title display"><span data-i18n="writing.titleLead">写给还没</span><em data-i18n="writing.titleEm">散场的人</em></h2>
             <p class="section-lead" data-i18n="writing.body">公众号「KunKun杂谈」。在微信里搜这个名字就能找到。</p>
             <p class="wechat-name display" data-i18n="writing.account">KunKun杂谈</p>
             <button type="button" class="copy-btn wechat-copy" id="wechat-copy" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">复制账号</button>
@@ -231,10 +218,7 @@
               <span data-i18n="photo.kicker">肆 · 摄影</span>
               <span class="kicker-line" aria-hidden="true"></span>
             </p>
-            <h2 class="section-title display">
-              <span data-i18n="photo.titleLead">二十帧，</span>
-              <em data-i18n="photo.titleEm">原样留下</em>
-            </h2>
+            <h2 class="section-title display"><span data-i18n="photo.titleLead">二十帧，</span><em data-i18n="photo.titleEm">原样留下</em></h2>
             <p class="section-lead" data-i18n="photo.body">不裁剪，留住按下快门时的画幅。</p>
           </header>
           <div class="gallery" id="gallery"></div>

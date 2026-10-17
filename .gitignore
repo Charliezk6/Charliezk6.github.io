@@ -9,5 +9,6 @@ personal photography collection/
 .env.*
 *.md
 *.txt
+pr-shots/
 *.m4a
 !assets/music/desafinado.m4a
