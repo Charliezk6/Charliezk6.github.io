@@ -3,90 +3,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0c0b0a" />
+    <meta name="color-scheme" content="dark" />
     <title>张焜 / Kun Zhang</title>
     <meta name="description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="canonical" href="https://charliezk6.github.io/" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="张焜 / Kun Zhang" />
+    <meta property="og:title" content="张焜 / Kun Zhang" />
+    <meta property="og:description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
+    <meta property="og:url" content="https://charliezk6.github.io/" />
+    <meta property="og:image" content="https://charliezk6.github.io/assets/photos/full/IMG_3786.webp" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="张焜 / Kun Zhang" />
+    <meta name="twitter:description" content="张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。" />
+    <meta name="twitter:image" content="https://charliezk6.github.io/assets/photos/full/IMG_3786.webp" />
+    <script>
+      try {
+        if (localStorage.getItem("kz-lang") === "en") document.documentElement.lang = "en";
+      } catch (error) {
+        /* storage unavailable */
+      }
+    </script>
+    <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <canvas class="comet" aria-hidden="true"></canvas>
-    <audio id="site-audio" preload="auto" autoplay playsinline></audio>
-    <div class="player-pop">
-      <button type="button" class="player-fab" id="player-fab" data-i18n-aria="music.trackLabel">
-        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      </button>
-      <button type="button" class="track" id="track-toggle" data-i18n-aria="music.trackLabel">
-        <img class="track-cover" src="assets/photos/images.jpg" alt="" />
-        <span class="track-copy">
-          <span class="track-title">Desafinado</span>
-          <span class="track-artists">Stan Getz / João Gilberto / Antonio Carlos Jobim</span>
-          <span class="track-source" data-i18n="music.source">Getz/Gilberto · Verve · 1964</span>
-        </span>
-      </button>
-    </div>
-    <nav class="site-nav" aria-label="Primary">
-      <div class="nav-pill">
+    <a class="skip" href="#home" data-i18n="nav.skip">跳到内容</a>
+    <audio id="site-audio" preload="none" playsinline></audio>
+
+    <header class="site-nav">
+      <div class="nav-bar">
         <a class="nav-mark" href="#home">
-          <span class="nav-mark-ring" aria-hidden="true"></span>
-          <span class="nav-mark-fill" aria-hidden="true"></span>
           <span class="nav-mark-text" data-i18n="mark">张</span>
         </a>
-        <span class="nav-rule" aria-hidden="true"></span>
-        <div class="nav-links">
+        <span class="nav-now" id="nav-now" data-i18n="nav.home">首页</span>
+        <nav class="nav-links" id="nav-links" data-i18n-aria="nav.sections" aria-label="章节">
           <a href="#home" data-nav="home" data-i18n="nav.home" aria-current="page">首页</a>
           <a href="#music" data-nav="music" data-i18n="nav.music">音乐</a>
           <a href="#computing" data-nav="computing" data-i18n="nav.computing">计算机</a>
           <a href="#writing" data-nav="writing" data-i18n="nav.writing">写作</a>
           <a href="#photography" data-nav="photography" data-i18n="nav.photography">摄影</a>
-        </div>
-        <span class="nav-rule" aria-hidden="true"></span>
+        </nav>
         <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" class="lang-chip" data-lang="zh" aria-pressed="true">中</button>
           <button type="button" class="lang-chip" data-lang="en" aria-pressed="false">EN</button>
         </div>
-        <span class="hover-shell">
-          <span class="hover-ring" aria-hidden="true"></span>
-          <button type="button" class="nav-resume resume-open" data-i18n="nav.resume">履历</button>
-        </span>
+        <button type="button" class="nav-resume resume-open" data-i18n="nav.resume">履历</button>
+        <button
+          type="button"
+          class="nav-toggle"
+          id="nav-toggle"
+          aria-expanded="false"
+          aria-controls="nav-drawer"
+        >
+          <span class="nav-toggle-icon" aria-hidden="true"></span>
+          <span class="sr-only" id="nav-toggle-label" data-i18n="nav.menu">打开菜单</span>
+        </button>
       </div>
+    </header>
+
+    <nav class="nav-drawer" id="nav-drawer" hidden data-i18n-aria="nav.sections" aria-label="章节">
+      <a href="#home" data-nav="home"><span>00</span><span data-i18n="nav.home">首页</span></a>
+      <a href="#music" data-nav="music"><span>01</span><span data-i18n="nav.music">音乐</span></a>
+      <a href="#computing" data-nav="computing"><span>02</span><span data-i18n="nav.computing">计算机</span></a>
+      <a href="#writing" data-nav="writing"><span>03</span><span data-i18n="nav.writing">写作</span></a>
+      <a href="#photography" data-nav="photography"><span>04</span><span data-i18n="nav.photography">摄影</span></a>
     </nav>
+
+    <div class="player">
+      <button type="button" class="player-bar" id="player-fab" aria-pressed="false" data-i18n-aria="music.play">
+        <img class="player-cover" src="assets/music/desafinado.webp" width="267" height="400" alt="" data-i18n-alt="music.coverAlt" />
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="player-meta">
+          <span class="player-title">Desafinado</span>
+          <span class="player-source" data-i18n="music.source">Getz/Gilberto · Verve · 1964</span>
+        </span>
+      </button>
+    </div>
 
     <main>
       <section class="hero" id="home">
-        <div class="hero-copy">
-          <p class="kicker blur-in">
-            <span class="kicker-line" aria-hidden="true"></span>
-            <span data-i18n="hero.eyebrow">南京审计大学</span>
-            <span class="kicker-line" aria-hidden="true"></span>
-          </p>
-          <h1 class="name-reveal">
-            <span class="name-zh">张焜</span>
-            <span class="name-en">Kun Zhang</span>
-          </h1>
-          <p class="hero-role lead-rise">
-            <span class="role-word" id="role-word">音乐</span><span data-i18n="hero.roleRest">，写在审计之外。</span>
-          </p>
-          <p class="hero-line lead-rise" data-i18n="hero.line">南京审计大学审计学专业</p>
-          <div class="hero-actions blur-in">
-            <span class="hover-shell">
-              <span class="hover-ring" aria-hidden="true"></span>
-              <button type="button" class="btn-fill resume-open" data-i18n="nav.resume">履历</button>
-            </span>
-            <span class="hover-shell">
-              <span class="hover-ring" aria-hidden="true"></span>
-              <a class="btn-line" href="#photography" data-i18n="nav.photography">摄影</a>
-            </span>
+        <div class="hero-layout">
+          <p class="hero-spine" data-i18n="hero.spine">南京 · 审计学</p>
+          <div class="hero-copy">
+            <p class="kicker">
+              <span class="kicker-line" aria-hidden="true"></span>
+              <span data-i18n="hero.eyebrow">南京审计大学</span>
+            </p>
+            <h1 class="name-reveal">
+              <span class="name-zh display" data-text="张焜">张焜</span>
+              <span class="name-en display" data-text="Kun Zhang">Kun Zhang</span>
+            </h1>
+            <p class="hero-role">
+              <span class="role-word" id="role-word">音乐</span><span data-i18n="hero.roleRest">，写在课表之外。</span>
+            </p>
+            <p class="hero-line" data-i18n="hero.line">读审计。其余的时间，交给音乐、代码、句子和取景框。</p>
+            <div class="hero-actions">
+              <button type="button" class="btn-fill resume-open" data-i18n="hero.resume">翻阅履历</button>
+              <a class="btn-line" href="#photography" data-i18n="hero.photos">步入暗房</a>
+            </div>
           </div>
+          <figure class="hero-frame">
+            <img
+              src="assets/photos/full/IMG_3786.webp"
+              width="1200"
+              height="1600"
+              alt="冬日林中的观音石像"
+              data-i18n-alt="hero.frameAlt"
+              fetchpriority="high"
+            />
+            <figcaption>
+              <span class="hero-plate">14</span>
+              <span data-i18n="hero.frame">冬日林中</span>
+            </figcaption>
+          </figure>
         </div>
-        <div class="scroll-cue">
-          <span data-i18n="hero.scroll">向下</span>
-          <span class="scroll-line" aria-hidden="true"><span class="scroll-line-bar"></span></span>
+        <div class="hero-foot">
+          <nav class="hero-index" data-i18n-aria="nav.sections" aria-label="章节">
+            <a href="#music"><span>01</span><span data-i18n="nav.music">音乐</span></a>
+            <a href="#computing"><span>02</span><span data-i18n="nav.computing">计算机</span></a>
+            <a href="#writing"><span>03</span><span data-i18n="nav.writing">写作</span></a>
+            <a href="#photography"><span>04</span><span data-i18n="nav.photography">摄影</span></a>
+          </nav>
+          <p class="scroll-cue">
+            <span data-i18n="hero.scroll">向下</span>
+            <span class="scroll-line" aria-hidden="true"><span class="scroll-line-bar"></span></span>
+          </p>
         </div>
       </section>
 
@@ -95,92 +141,67 @@
           <header class="section-head">
             <p class="kicker">
               <span class="kicker-line" aria-hidden="true"></span>
-              <span data-i18n="music.kicker">音乐</span>
+              <span data-i18n="music.kicker">壹 · 音乐</span>
             </p>
-            <h2 class="section-title">
-              <span data-i18n="music.titleLead">夜里另一张</span>
-              <em data-i18n="music.titleEm">书桌</em>
+            <h2 class="section-title display">
+              <span data-i18n="music.titleLead">夜里还有</span>
+              <em data-i18n="music.titleEm">一张书桌</em>
             </h2>
-            <p class="section-lead" data-i18n="music.body">网易云认证校园音乐人。竹笛专业十级。编曲是夜里另一张书桌。</p>
+            <p class="section-lead" data-i18n="music.body">网易云认证校园音乐人，竹笛专业十级。编曲是灯还亮着的那一会儿。</p>
           </header>
           <div class="work-grid">
             <figure class="work-card span-7">
-              <img class="work-photo" src="assets/music/piano.jpg" alt="" />
-              <figcaption class="work-card-body">
-                <h3 data-i18n="music.piano">钢琴</h3>
-              </figcaption>
+              <img class="work-photo" src="assets/music/piano.webp" alt="" data-i18n-alt="music.altPiano" width="1152" height="864" loading="lazy" decoding="async" />
+              <figcaption class="work-card-body"><h3 data-i18n="music.piano">钢琴</h3></figcaption>
             </figure>
             <figure class="work-card span-5">
-              <img class="work-photo" src="assets/music/flute.jpg" alt="" />
-              <figcaption class="work-card-body">
-                <h3 data-i18n="music.flute">竹笛</h3>
-              </figcaption>
+              <img class="work-photo" src="assets/music/flute.webp" alt="" data-i18n-alt="music.altFlute" width="1152" height="864" loading="lazy" decoding="async" />
+              <figcaption class="work-card-body"><h3 data-i18n="music.flute">竹笛</h3></figcaption>
             </figure>
             <figure class="work-card span-5">
-              <img class="work-photo" src="assets/music/drums.jpg" alt="" />
-              <figcaption class="work-card-body">
-                <h3 data-i18n="music.drums">架子鼓</h3>
-              </figcaption>
+              <img class="work-photo" src="assets/music/drums.webp" alt="" data-i18n-alt="music.altDrums" width="1152" height="864" loading="lazy" decoding="async" />
+              <figcaption class="work-card-body"><h3 data-i18n="music.drums">架子鼓</h3></figcaption>
             </figure>
             <figure class="work-card span-7">
-              <img class="work-photo" src="assets/music/guitar.jpg" alt="" />
-              <figcaption class="work-card-body">
-                <h3 data-i18n="music.guitar">吉他</h3>
-              </figcaption>
+              <img class="work-photo" src="assets/music/guitar.webp" alt="" data-i18n-alt="music.altGuitar" width="1152" height="864" loading="lazy" decoding="async" />
+              <figcaption class="work-card-body"><h3 data-i18n="music.guitar">吉他</h3></figcaption>
             </figure>
           </div>
           <div class="journal-list music-link">
-            <a
-              class="journal-row"
-              href="https://music.163.com/#/artist?id=94272555"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a class="journal-row" href="https://music.163.com/#/artist?id=94272555" target="_blank" rel="noopener noreferrer">
               <span class="netease-mark" aria-hidden="true">
                 <svg viewBox="0 0 64 64">
                   <circle cx="32" cy="32" r="32" fill="#ec4141"></circle>
-                  <path
-                    fill="#fff"
-                    d="M40 18.5v18.2a6.2 6.2 0 1 1-4-5.8V22.2l14-3.6v16.2a6.2 6.2 0 1 1-4-5.8V16.2L40 18.5z"
-                  ></path>
+                  <path fill="#fff" d="M40 18.5v18.2a6.2 6.2 0 1 1-4-5.8V22.2l14-3.6v16.2a6.2 6.2 0 1 1-4-5.8V16.2L40 18.5z"></path>
                 </svg>
               </span>
-              <span class="journal-copy">
-                <h3 data-i18n="music.link">网易云主页</h3>
-              </span>
+              <span class="journal-copy"><h3 data-i18n="music.link">网易云主页</h3></span>
               <span class="row-go" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14M13 6l6 6-6 6"></path>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
               </span>
             </a>
           </div>
         </div>
       </section>
 
-      <section class="band band-tight" id="computing">
+      <section class="band" id="computing">
         <div class="wrap">
           <header class="section-head">
             <p class="kicker">
               <span class="kicker-line" aria-hidden="true"></span>
-              <span data-i18n="computing.kicker">计算机</span>
+              <span data-i18n="computing.kicker">贰 · 计算机</span>
             </p>
             <div class="section-head-row">
               <div>
-                <h2 class="section-title">
-                  <span data-i18n="computing.titleLead">数据与</span>
+                <h2 class="section-title display">
+                  <span data-i18n="computing.titleLead">数据，以及</span>
                   <em data-i18n="computing.titleEm">模型</em>
                 </h2>
-                <p class="section-lead" data-i18n="computing.body">用 Python 做数据、模型和一点智能体。</p>
+                <p class="section-lead" data-i18n="computing.body">用 Python 整理样本、拟合模型，也做一点能干活的智能体。</p>
               </div>
               <a class="pill-link" href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer">
-                <span class="hover-ring" aria-hidden="true"></span>
-                <span class="pill-link-face">
-                  <span data-i18n="computing.github">GitHub</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12h14M13 6l6 6-6 6"></path>
-                  </svg>
-                </span>
+                <span data-i18n="computing.github">GitHub</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
               </a>
             </div>
           </header>
@@ -193,76 +214,55 @@
           <header class="section-head">
             <p class="kicker">
               <span class="kicker-line" aria-hidden="true"></span>
-              <span data-i18n="writing.kicker">写作</span>
+              <span data-i18n="writing.kicker">叁 · 写作</span>
             </p>
-            <h2 class="section-title">
-              <span data-i18n="writing.titleLead">公众号上</span>
-              <em data-i18n="writing.titleEm">慢慢写</em>
+            <h2 class="section-title display">
+              <span data-i18n="writing.titleLead">写给还没</span>
+              <em data-i18n="writing.titleEm">散场的人</em>
             </h2>
-            <p class="section-lead" data-i18n="writing.body">用公众号慢慢写。微信里搜索账号即可关注。</p>
-            <p class="wechat-name">KunKun杂谈</p>
-            <button type="button" class="copy-btn wechat-copy" data-copy="KunKun杂谈" data-i18n-copy="copy.wechat">
-              复制账号
-            </button>
+            <p class="section-lead" data-i18n="writing.body">公众号「昆昆杂谈」。在微信里搜这个名字就能找到。</p>
+            <p class="wechat-name display">昆昆杂谈</p>
+            <button type="button" class="copy-btn wechat-copy" data-copy="昆昆杂谈" data-i18n-copy="copy.wechat">复制账号</button>
           </header>
           <div class="journal-list" id="writing-list"></div>
         </div>
       </section>
 
-      <section class="explore" id="photography">
-        <div class="explore-pin">
-          <div class="explore-float" aria-hidden="true">
-            <span class="float-ring lg"></span>
-            <span class="float-ring"></span>
-            <span class="float-ring sm"></span>
-            <span class="float-dot"></span>
-            <span class="float-dot sm"></span>
-            <span class="float-dot"></span>
-            <span class="float-bar"></span>
-            <span class="float-bar short"></span>
-            <span class="float-orbit"><i></i></span>
-            <span class="float-orbit slow"><i></i></span>
-            <span class="float-ring"></span>
-            <span class="float-dot sm"></span>
-            <span class="float-bar"></span>
-            <span class="float-ring sm"></span>
-          </div>
-          <div class="explore-copy">
+      <section class="band" id="photography">
+        <div class="wrap">
+          <header class="section-head section-head-center">
             <p class="kicker">
               <span class="kicker-line" aria-hidden="true"></span>
-              <span data-i18n="photo.kicker">摄影</span>
+              <span data-i18n="photo.kicker">肆 · 摄影</span>
               <span class="kicker-line" aria-hidden="true"></span>
             </p>
-            <h2 class="section-title">
-              <span data-i18n="photo.titleLead">点开看</span>
-              <em data-i18n="photo.titleEm">大图</em>
+            <h2 class="section-title display">
+              <span data-i18n="photo.titleLead">暗房里的</span>
+              <em data-i18n="photo.titleEm">二十帧</em>
             </h2>
-            <p class="section-lead" data-i18n="photo.body">点开看大图。</p>
-          </div>
-        </div>
-        <div class="explore-stage">
-          <div class="explore-col explore-col-left" id="gallery-left"></div>
-          <div class="explore-col explore-col-right" id="gallery-right"></div>
+            <p class="section-lead" data-i18n="photo.body">保留原来的画幅。点开，看大图。</p>
+          </header>
+          <div class="gallery" id="gallery"></div>
         </div>
       </section>
 
-      <section class="band" id="facts">
+      <section class="band band-tight" id="facts">
         <div class="wrap">
           <div class="stats-grid">
             <div class="stat">
-              <span class="stat-num" data-count="3.75" data-decimals="1">
+              <span class="stat-num display" data-count="3.75" data-decimals="2">
                 <span class="stat-value">3.75</span>
               </span>
               <span class="stat-label" data-i18n="stats.gpa">绩点</span>
             </div>
             <div class="stat">
-              <span class="stat-num" data-count="4" data-decimals="0">
-                <span class="stat-value">4</span><span class="stat-suffix">/83</span>
+              <span class="stat-num display" data-count="4" data-decimals="0">
+                <span class="stat-value">4</span><span class="stat-suffix"> / 83</span>
               </span>
               <span class="stat-label" data-i18n="stats.rank">专业排名</span>
             </div>
             <div class="stat">
-              <span class="stat-num" data-count="7" data-decimals="1">
+              <span class="stat-num display" data-count="7" data-decimals="1">
                 <span class="stat-value">7.0</span>
               </span>
               <span class="stat-label" data-i18n="stats.ielts">雅思</span>
@@ -273,40 +273,20 @@
     </main>
 
     <footer class="site-footer" id="contact">
-      <div class="marquee" aria-hidden="true">
-        <div class="marquee-track" id="marquee-track"></div>
-      </div>
       <div class="wrap footer-contact">
-        <p class="kicker footer-kicker">
+        <p class="kicker">
           <span class="kicker-line" aria-hidden="true"></span>
           <span data-i18n="connect.emailLabel">邮箱</span>
           <span class="kicker-line" aria-hidden="true"></span>
         </p>
-        <span class="hover-shell">
-          <span class="hover-ring" aria-hidden="true"></span>
-          <a class="footer-mail" href="mailto:13543478517@163.com">
-            13543478517@163.com
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M7 17 17 7M9 7h8v8"></path>
-            </svg>
-          </a>
-        </span>
+        <a class="footer-mail display" href="mailto:charliecheungzk6@gmail.com">charliecheungzk6@gmail.com</a>
       </div>
       <div class="wrap">
         <div class="footer-bar">
           <p data-i18n="footer">© 2026 张焜</p>
-          <a
-            class="icon-round"
-            href="https://github.com/Charliezk6"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
+          <a class="icon-round" href="https://github.com/Charliezk6" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.7 7.7 0 0 1 8 4.77c.68.003 1.36.092 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-              ></path>
+              <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.7 7.7 0 0 1 8 4.77c.68.003 1.36.092 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
             </svg>
           </a>
         </div>
@@ -315,33 +295,24 @@
 
     <dialog class="resume-dialog" id="resume">
       <div class="resume-bar">
-        <h2 data-i18n="resume.title">履历</h2>
-        <button type="button" class="resume-close" aria-label="关闭">×</button>
+        <h2 class="display" data-i18n="resume.title">履历</h2>
+        <button type="button" class="icon-btn resume-close" aria-label="关闭">×</button>
       </div>
       <div class="resume-scroll">
-        <p class="edu-school" data-i18n="resume.edu">南京审计大学 · 审计学专业</p>
+        <p class="edu-school" data-i18n="resume.edu">南京审计大学 · 审计学专业 · 2023.09 – 2027.09</p>
         <p class="edu-meta" data-i18n="resume.eduMeta">GPA 3.75 / 5.0（4 / 83）</p>
-        <p class="edu-honors" data-i18n="resume.honors">三好学生 · 优秀学生干部 · 综合一等奖学金 ×2 · 优秀团员</p>
+        <p class="edu-honors" data-i18n="resume.honors">三好学生（前 2.5%） · 优秀学生干部 · 综合一等奖学金 ×2（前 5%） · 优秀团员</p>
         <p class="skills" data-i18n="resume.skills">Python · Excel · SQL Server · IELTS 7.0 · CET-6 · 粤语</p>
         <h3 data-i18n="resume.pathTitle">经历</h3>
         <ol class="timeline" id="timeline"></ol>
         <h3 data-i18n="resume.researchTitle">研究与竞赛</h3>
         <div class="research-list" id="research-list"></div>
-        <a
-          class="text-link"
-          href="https://github.com/Charliezk6/CUMCM-2026"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-i18n="resume.github"
-          >CUMCM-2026</a
-        >
+        <a class="text-link" href="https://github.com/Charliezk6/CUMCM-2026" target="_blank" rel="noopener noreferrer" data-i18n="resume.github">CUMCM-2026</a>
         <ul class="connect-list">
           <li>
             <span data-i18n="connect.emailLabel">邮箱</span>
-            <a class="text-link" href="mailto:13543478517@163.com">13543478517@163.com</a>
-            <button type="button" class="copy-btn text-link" data-copy="13543478517@163.com" data-i18n-copy="copy.email">
-              复制
-            </button>
+            <a class="text-link" href="mailto:charliecheungzk6@gmail.com">charliecheungzk6@gmail.com</a>
+            <button type="button" class="copy-btn text-link" data-copy="charliecheungzk6@gmail.com" data-i18n-copy="copy.email">复制</button>
           </li>
           <li>
             <span>GitHub</span>
@@ -358,24 +329,28 @@
             <span class="kicker-line" aria-hidden="true"></span>
             <span id="dossier-kicker">论文与证书</span>
           </p>
-          <h2 id="dossier-title"></h2>
+          <h2 class="display" id="dossier-title"></h2>
         </div>
-        <button type="button" class="dossier-close" aria-label="关闭">×</button>
+        <button type="button" class="icon-btn dossier-close" aria-label="关闭">×</button>
       </div>
       <div class="dossier-stage" id="dossier-stage"></div>
     </dialog>
 
     <div class="lightbox" id="lightbox" hidden>
-      <button type="button" class="icon-btn lightbox-close" aria-label="Close">×</button>
-      <button type="button" class="icon-btn lightbox-prev" aria-label="Previous">‹</button>
-      <img alt="" />
-      <button type="button" class="icon-btn lightbox-next" aria-label="Next">›</button>
+      <button type="button" class="icon-btn lightbox-close" aria-label="关闭">×</button>
+      <button type="button" class="icon-btn lightbox-prev" aria-label="上一张">‹</button>
+      <figure class="lightbox-frame">
+        <img alt="" />
+        <figcaption>
+          <span id="lightbox-count">01 / 20</span>
+          <span id="lightbox-caption"></span>
+        </figcaption>
+      </figure>
+      <button type="button" class="icon-btn lightbox-next" aria-label="下一张">›</button>
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="js/vendor/pdf.min.js"></script>
-    <script src="js/hero.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/photos.js"></script>
     <script src="js/motion.js"></script>
