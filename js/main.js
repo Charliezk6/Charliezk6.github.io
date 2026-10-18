@@ -76,14 +76,14 @@
 
   const DOCS = [
     [
-      { kind: "pdf", src: "assets/docs/apmcm-paper.pdf" },
-      { kind: "pdf", src: "assets/docs/apmcm-award.pdf" },
+      { kind: "pdf", src: "assets/docs/apmcm-paper.pdf", preview: ["assets/docs/preview/apmcm-paper.webp"] },
+      { kind: "pdf", src: "assets/docs/apmcm-award.pdf", preview: ["assets/docs/preview/apmcm-award.webp"] },
     ],
     [
-      { kind: "pdf", src: "assets/docs/huashu-paper.pdf" },
-      { kind: "image", src: "assets/docs/huashu-award.png" },
+      { kind: "pdf", src: "assets/docs/huashu-paper-ebook.pdf", preview: ["assets/docs/preview/huashu-paper.webp"] },
+      { kind: "image", src: "assets/docs/huashu-award.png", preview: ["assets/docs/preview/huashu-award.webp"] },
     ],
-    [{ kind: "pdf", src: "assets/docs/xiong-award.pdf" }],
+    [{ kind: "pdf", src: "assets/docs/xiong-award.pdf", preview: ["assets/docs/preview/xiong-award.webp"] }],
   ];
 
   const postMarks = [
@@ -242,10 +242,14 @@
     stopPdf();
     const gen = pdfRenderGen;
     const dict = getDict(lang);
+    let timeoutId = 0;
+    const timeout = new Promise((_, reject) => {
+      timeoutId = window.setTimeout(() => reject(new Error("timeout")), 8000);
+    });
     try {
-      await ensurePdfEngine();
+      await Promise.race([ensurePdfEngine(), timeout]);
       if (gen !== pdfRenderGen || !pages.isConnected) return;
-      const response = await fetch(url);
+      const response = await Promise.race([fetch(url), timeout]);
       if (!response.ok) throw new Error("missing");
       const data = await response.arrayBuffer();
       if (gen !== pdfRenderGen || !pages.isConnected) return;
@@ -260,7 +264,7 @@
         useWorkerFetch: false,
       });
       pdfTask = loading;
-      const pdf = await loading.promise;
+      const pdf = await Promise.race([loading.promise, timeout]);
       if (gen !== pdfRenderGen || !pages.isConnected) return;
       pages.innerHTML = `
         <div class="pdf-stage" id="pdf-stage"></div>
@@ -309,7 +313,39 @@
     } catch (error) {
       if (gen !== pdfRenderGen || !pages.isConnected) return;
       pages.innerHTML = `<p>${esc(dict.computing.fail)}</p>${sheetLink(url)}`;
+    } finally {
+      window.clearTimeout(timeoutId);
     }
+  };
+
+  const markPreviewReady = (root) => {
+    root.querySelectorAll(".doc-page img").forEach((img) => {
+      const ready = () => img.closest(".doc-page")?.classList.add("is-ready");
+      if (img.complete && img.naturalWidth) ready();
+      else img.addEventListener("load", ready);
+    });
+  };
+
+  const previewMarkup = (file, href, name) => {
+    const dict = getDict(lang);
+    const shots = file.preview || [];
+    const pages = shots
+      .map(
+        (src, index) => `
+        <figure class="doc-page">
+          <span class="doc-skeleton" aria-hidden="true"></span>
+          <img src="${esc(src)}" alt="${esc(name)}" width="1400" height="1867" loading="${index ? "lazy" : "eager"}" decoding="async" />
+        </figure>`
+      )
+      .join("");
+    return `
+      <div class="doc-view">
+        <div class="doc-toolbar">
+          <a class="text-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(dict.computing.openFile)}</a>
+          <a class="text-link" href="${esc(href)}" download>${esc(dict.computing.download)}</a>
+        </div>
+        <div class="doc-pages">${pages}</div>
+      </div>`;
   };
 
   const openViewer = (docIndex, fileIndex) => {
@@ -322,10 +358,13 @@
     setText(dossierKicker, dict.computing.dossierKicker);
     setText(dossierTitle, meta.name);
     if (dossierClose) dossierClose.setAttribute("aria-label", dict.computing.close);
-    if (file.kind === "image") {
+    if (file.preview && file.preview.length) {
+      dossierStage.innerHTML = previewMarkup(file, href, meta.name);
+      markPreviewReady(dossierStage);
+    } else if (file.kind === "image") {
       dossierStage.innerHTML = `<div class="sheet-frame"><img src="${esc(href)}" alt="${esc(meta.name)}" /></div>`;
     } else {
-      dossierStage.innerHTML = `<div class="pdf-pages" id="pdf-pages"><p>${esc(dict.computing.loading)}</p></div>`;
+      dossierStage.innerHTML = `<div class="pdf-pages" id="pdf-pages"><div class="doc-skeleton doc-skeleton-block" aria-hidden="true"></div><p>${esc(dict.computing.loading)}</p></div>`;
       renderPdf(href);
     }
     if (typeof dossierEl.showModal === "function") dossierEl.showModal();
@@ -454,7 +493,7 @@
     heroTimer = window.setInterval(() => {
       heroIndex += 1;
       paintHero(true);
-    }, 5000);
+    }, 3200);
   };
   const stepHero = (delta) => {
     heroIndex += delta;
@@ -463,23 +502,6 @@
   };
 
   if (heroFrame) {
-    heroFrame.addEventListener("pointerenter", () => {
-      heroPaused = true;
-      stopHero();
-    });
-    heroFrame.addEventListener("pointerleave", () => {
-      heroPaused = false;
-      startHero();
-    });
-    heroFrame.addEventListener("focusin", () => {
-      heroPaused = true;
-      stopHero();
-    });
-    heroFrame.addEventListener("focusout", (event) => {
-      if (heroFrame.contains(event.relatedTarget)) return;
-      heroPaused = false;
-      startHero();
-    });
     let swipeX = null;
     heroFrame.addEventListener("pointerdown", (event) => {
       if (event.target.closest("button")) return;
@@ -505,13 +527,13 @@
       const heroWatch = new IntersectionObserver(
         (entries) => {
           const entry = entries[0];
-          heroInView = Boolean(entry && entry.isIntersecting && entry.intersectionRatio >= 0.35);
+          heroInView = Boolean(entry && entry.isIntersecting && entry.intersectionRatio >= 0.2);
           if (heroInView) startHero();
           else stopHero();
         },
-        { threshold: [0, 0.35, 0.6] }
+        { threshold: [0, 0.2, 0.6] }
       );
-      heroWatch.observe(heroFrame);
+      heroWatch.observe(document.getElementById("home") || heroFrame);
     }
     document.addEventListener("visibilitychange", () => {
       heroTabVisible = document.visibilityState !== "hidden";
@@ -584,6 +606,18 @@
       const current = (window.PHOTOS || [])[heroIndex];
       document.querySelector(".hero-slide.is-current")?.setAttribute("alt", photoAlt(current));
     }
+    const playing = document.getElementById("now-playing");
+    if (playing && dict.now && dict.now.playingHref) playing.href = dict.now.playingHref;
+    const framePhoto = (window.PHOTOS || [])[Number(dict.now && dict.now.frameIndex) || 0];
+    const nowThumb = document.getElementById("now-thumb");
+    const nowFrame = document.getElementById("now-frame");
+    if (nowThumb && framePhoto) {
+      nowThumb.src = framePhoto.thumb;
+      nowThumb.alt = photoAlt(framePhoto);
+      nowThumb.width = framePhoto.w;
+      nowThumb.height = framePhoto.h;
+    }
+    if (nowFrame) nowFrame.dataset.index = String(Number(dict.now && dict.now.frameIndex) || 0);
     startHero();
     setPlaying(siteAudio ? !siteAudio.paused && !siteAudio.ended && audioReady : false);
     if (window.SiteMotion) window.SiteMotion.mount(() => getDict(lang));
@@ -719,7 +753,7 @@
       }
       return;
     }
-    const item = event.target.closest(".plate");
+    const item = event.target.closest(".plate, #now-frame");
     if (item) showPhoto(Number(item.dataset.index));
   });
 

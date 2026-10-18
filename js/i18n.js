@@ -1,6 +1,6 @@
 window.I18N = {
   zh: {
-    metaDescription: "张焜。南京审计大学审计学专业。音乐、计算机、写作、摄影。",
+    metaDescription: "张焜。声音、代码、文字与光影。",
     nav: {
       home: "首页",
       music: "音乐",
@@ -15,9 +15,8 @@ window.I18N = {
     },
     mark: "张",
     hero: {
-      eyebrow: "南京审计大学",
-      line: "读审计。其余的时间，交给旋律、代码、文字与光。",
-      roleRest: "，在课表之外。",
+      line: "声音、代码、句子，还有取景框里的光。",
+      roleRest: "，陪我过完一天。",
       scroll: "向下",
       resume: "翻阅履历",
       photos: "拾光",
@@ -54,6 +53,7 @@ window.I18N = {
       paper: "论文",
       award: "证书",
       openFile: "新标签打开",
+      download: "下载",
       prevPage: "上一页",
       nextPage: "下一页",
       loading: "正在打开…",
@@ -112,7 +112,22 @@ window.I18N = {
       next: "下一张",
       carousel: "照片轮播",
     },
-    stats: { gpa: "绩点", rank: "专业排名", rankSuffix: " / 83", ielts: "雅思" },
+    now: {
+      kicker: "此刻",
+      playingLabel: "在听",
+      // TODO: replace with the record actually on the desk.
+      playingTitle: "Desafinado",
+      playingMeta: "Stan Getz · João Gilberto",
+      playingHref: "https://music.163.com/#/artist?id=94272555",
+      readingLabel: "在读",
+      // TODO: fill in the book and author.
+      readingTitle: "书名待补",
+      readingMeta: "作者待补",
+      frameLabel: "最近一帧",
+      // TODO: point frameIndex at the latest photograph and name the place.
+      frameIndex: 13,
+      framePlace: "地点待补",
+    },
     resume: {
       title: "履历",
       close: "关闭",
@@ -192,7 +207,7 @@ window.I18N = {
     },
   },
   en: {
-    metaDescription: "Kun Zhang studies audit in Nanjing. The rest of the site is music, computing, writing, and photographs.",
+    metaDescription: "Kun Zhang. Sound, code, words, and light.",
     nav: {
       home: "Home",
       music: "Music",
@@ -207,9 +222,8 @@ window.I18N = {
     },
     mark: "KZ",
     hero: {
-      eyebrow: "Nanjing Audit University",
-      line: "I study audit; the hours left over belong to melody, code, words, and light.",
-      roleRest: ", beyond the syllabus.",
+      line: "Sound, code, sentences, and the light in a frame.",
+      roleRest: ", through the hours I keep.",
       scroll: "Scroll",
       resume: "Read the CV",
       photos: "Through the lens",
@@ -246,6 +260,7 @@ window.I18N = {
       paper: "Paper",
       award: "Certificate",
       openFile: "Open in a new tab",
+      download: "Download",
       prevPage: "Previous page",
       nextPage: "Next page",
       loading: "Opening…",
@@ -304,7 +319,22 @@ window.I18N = {
       next: "Next",
       carousel: "Photograph carousel",
     },
-    stats: { gpa: "GPA", rank: "Class rank", rankSuffix: " / 83", ielts: "IELTS" },
+    now: {
+      kicker: "Now",
+      playingLabel: "Now playing",
+      // TODO: replace with the record actually on the desk.
+      playingTitle: "Desafinado",
+      playingMeta: "Stan Getz · João Gilberto",
+      playingHref: "https://music.163.com/#/artist?id=94272555",
+      readingLabel: "Reading",
+      // TODO: fill in the book and author.
+      readingTitle: "Title to come",
+      readingMeta: "Author to come",
+      frameLabel: "Last frame",
+      // TODO: point frameIndex at the latest photograph and name the place.
+      frameIndex: 13,
+      framePlace: "Place to come",
+    },
     resume: {
       title: "Curriculum vitae",
       close: "Close",
