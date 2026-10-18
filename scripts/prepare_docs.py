@@ -1,8 +1,11 @@
-"""Render a first-page WebP preview and recompress each PDF."""
-import os
+"""Render a first-page WebP preview. Leave the PDF bytes alone.
+
+An earlier rewrite_images pass replaced figure XObjects with 2×2 JPEGs,
+so charts opened in a new tab as a flat blur. The files in assets/docs
+are the pre-compression originals.
+"""
 from pathlib import Path
 
-import fitz
 import pypdfium2 as pdfium
 from PIL import Image
 
@@ -29,31 +32,11 @@ def render_first(path, dest):
     return image.size, dest.stat().st_size
 
 
-def compress(path):
-    before = path.stat().st_size
-    doc = fitz.open(path)
-    # Certificates are one placed image plus vectors. Rewriting images
-    # drops the medal, ribbon, and seals and leaves a blank panel.
-    if "award" not in path.name and hasattr(doc, "rewrite_images"):
-        doc.rewrite_images(dpi_threshold=110, quality=62)
-    temp = path.with_suffix(".tmp.pdf")
-    doc.save(temp, garbage=4, deflate=True, deflate_images=True, clean=True)
-    doc.close()
-    after = temp.stat().st_size
-    if after < before:
-        temp.replace(path)
-    else:
-        temp.unlink()
-        after = before
-    return before, after
-
-
 def main():
     for name in TARGETS:
         path = DOCS / name
-        before, after = compress(path)
         size, preview_bytes = render_first(path, PREVIEW / f"{path.stem}.webp")
-        print(f"{name} pdf {before} -> {after} preview {size} {preview_bytes}")
+        print(f"{name} pdf {path.stat().st_size} preview {size} {preview_bytes}")
     award = DOCS / "huashu-award.png"
     image = Image.open(award).convert("RGB")
     edge = 1600

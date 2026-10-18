@@ -87,6 +87,21 @@
 
     <main>
       <section class="hero" id="home">
+        <svg class="hero-score" viewBox="0 0 360 124" fill="none" aria-hidden="true">
+          <g stroke="#f3efe6" stroke-width="1.15" stroke-linecap="round" vector-effect="non-scaling-stroke">
+            <path d="M8 42H118" opacity="0.4" />
+            <path d="M8 58H154" opacity="0.3" />
+            <path d="M8 74H102" opacity="0.22" />
+            <path d="M8 90H136" opacity="0.16" />
+            <path class="hero-arc" pathLength="100" d="M16 24C78 6 168 2 248 28" stroke="#e6d3ae" opacity="0.55" />
+            <path d="M118 42 L156 22" opacity="0.22" />
+          </g>
+          <g fill="#f3efe6" stroke="none">
+            <circle cx="118" cy="42" r="2.1" opacity="0.45" />
+            <circle cx="154" cy="58" r="1.6" opacity="0.32" />
+            <circle cx="156" cy="22" r="1.8" fill="#e6d3ae" opacity="0.5" />
+          </g>
+        </svg>
         <div class="hero-layout">
           <div class="hero-copy">
             <h1 class="name-reveal">
@@ -103,6 +118,19 @@
             </div>
           </div>
           <figure class="hero-frame" id="hero-frame" tabindex="0" aria-roledescription="carousel" data-i18n-aria="photo.carousel" aria-label="照片轮播">
+            <svg class="hero-marks" viewBox="0 0 500 640" fill="none" aria-hidden="true">
+              <g stroke="#f3efe6" stroke-width="1.15" stroke-linecap="round" vector-effect="non-scaling-stroke">
+                <path d="M36 78V36H78" opacity="0.55" />
+                <path d="M422 36H464V78" opacity="0.4" />
+                <path d="M36 562V604H78" opacity="0.3" />
+                <path d="M18 168C6 48 78 12 156 28" stroke="#e6d3ae" opacity="0.42" />
+                <path d="M156 28 L192 52" opacity="0.22" />
+              </g>
+              <g fill="#e6d3ae" stroke="none">
+                <circle cx="156" cy="28" r="2.2" opacity="0.55" />
+                <circle cx="192" cy="52" r="1.5" opacity="0.35" />
+              </g>
+            </svg>
             <div class="hero-papers">
               <img class="hero-sheet hero-sheet-back" id="hero-sheet-back" alt="" aria-hidden="true" />
               <img class="hero-sheet hero-sheet-mid" id="hero-sheet-mid" alt="" aria-hidden="true" />
@@ -134,22 +162,22 @@
             <p class="section-lead" data-i18n="music.body">网易云认证校园音乐人，竹笛专业十级。气息给竹笛，和弦给编曲。</p>
           </header>
           <div class="work-grid music-grid">
-            <figure class="work-card">
-              <img class="work-photo" src="assets/music/piano.webp" alt="" data-i18n-alt="music.altPiano" width="1152" height="864" loading="lazy" decoding="async" />
-              <figcaption class="work-card-body"><h3 data-i18n="music.piano">钢琴</h3></figcaption>
-            </figure>
-            <figure class="work-card">
-              <img class="work-photo" src="assets/music/flute.webp" alt="" data-i18n-alt="music.altFlute" width="1152" height="864" loading="lazy" decoding="async" />
-              <figcaption class="work-card-body"><h3 data-i18n="music.flute">竹笛</h3></figcaption>
-            </figure>
-            <figure class="work-card">
-              <img class="work-photo" src="assets/music/drums.webp" alt="" data-i18n-alt="music.altDrums" width="1152" height="864" loading="lazy" decoding="async" />
-              <figcaption class="work-card-body"><h3 data-i18n="music.drums">架子鼓</h3></figcaption>
-            </figure>
-            <figure class="work-card">
-              <img class="work-photo" src="assets/music/guitar.webp" alt="" data-i18n-alt="music.altGuitar" width="1152" height="864" loading="lazy" decoding="async" />
-              <figcaption class="work-card-body"><h3 data-i18n="music.guitar">吉他</h3></figcaption>
-            </figure>
+            <a class="work-card" data-instrument="piano" href="https://www.bilibili.com/video/BV1Z7411R7r2/" target="_blank" rel="noopener noreferrer">
+              <img class="work-photo" src="assets/photos/piano.jpg" alt="" data-i18n-alt="music.altPiano" width="1280" height="720" loading="lazy" decoding="async" />
+              <span class="work-card-body"><h3 data-i18n="music.piano">钢琴</h3></span>
+            </a>
+            <a class="work-card" data-instrument="flute" href="https://www.bilibili.com/video/BV1Lp4y1h7Ay/?p=10" target="_blank" rel="noopener noreferrer">
+              <img class="work-photo" src="assets/photos/bamboo%20flute.jpg" alt="" data-i18n-alt="music.altFlute" width="1280" height="720" loading="lazy" decoding="async" />
+              <span class="work-card-body"><h3 data-i18n="music.flute">竹笛</h3></span>
+            </a>
+            <a class="work-card" data-instrument="drums" href="https://www.bilibili.com/video/BV1jc411N7E2/" target="_blank" rel="noopener noreferrer">
+              <img class="work-photo" src="assets/photos/drums.jpg" alt="" data-i18n-alt="music.altDrums" width="1280" height="720" loading="lazy" decoding="async" />
+              <span class="work-card-body"><h3 data-i18n="music.drums">架子鼓</h3></span>
+            </a>
+            <a class="work-card" data-instrument="sax" href="https://www.bilibili.com/video/BV1FJ4m1K7hF/" target="_blank" rel="noopener noreferrer">
+              <img class="work-photo" src="assets/photos/saxphone.jpg" alt="" data-i18n-alt="music.altSax" width="1280" height="720" loading="lazy" decoding="async" />
+              <span class="work-card-body"><h3 data-i18n="music.sax">萨克斯</h3></span>
+            </a>
           </div>
           <div class="journal-list music-link">
             <a class="journal-row" href="https://music.163.com/#/artist?id=94272555" target="_blank" rel="noopener noreferrer">
@@ -232,8 +260,8 @@
           <div class="now-grid">
             <a class="now-card" id="now-playing" href="https://music.163.com/#/artist?id=94272555" target="_blank" rel="noopener noreferrer">
               <span class="now-label" data-i18n="now.playingLabel">在听</span>
-              <span class="now-title display" data-i18n="now.playingTitle">Desafinado</span>
-              <span class="now-meta" data-i18n="now.playingMeta">Stan Getz · João Gilberto</span>
+              <span class="now-title display" data-i18n="now.playingTitle">Shinning</span>
+              <span class="now-meta" data-i18n="now.playingMeta">Z.6 · 专辑 SHINNING</span>
             </a>
             <article class="now-card">
               <span class="now-label" data-i18n="now.readingLabel">在读</span>
