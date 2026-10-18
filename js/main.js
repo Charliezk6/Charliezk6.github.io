@@ -608,16 +608,8 @@
     }
     const playing = document.getElementById("now-playing");
     if (playing && dict.now && dict.now.playingHref) playing.href = dict.now.playingHref;
-    const framePhoto = (window.PHOTOS || [])[Number(dict.now && dict.now.frameIndex) || 0];
-    const nowThumb = document.getElementById("now-thumb");
-    const nowFrame = document.getElementById("now-frame");
-    if (nowThumb && framePhoto) {
-      nowThumb.src = framePhoto.thumb;
-      nowThumb.alt = photoAlt(framePhoto);
-      nowThumb.width = framePhoto.w;
-      nowThumb.height = framePhoto.h;
-    }
-    if (nowFrame) nowFrame.dataset.index = String(Number(dict.now && dict.now.frameIndex) || 0);
+    const writing = document.getElementById("now-writing");
+    if (writing && dict.now && dict.now.writingHref) writing.href = dict.now.writingHref;
     startHero();
     setPlaying(siteAudio ? !siteAudio.paused && !siteAudio.ended && audioReady : false);
     if (window.SiteMotion) window.SiteMotion.mount(() => getDict(lang));
@@ -753,7 +745,7 @@
       }
       return;
     }
-    const item = event.target.closest(".plate, #now-frame");
+    const item = event.target.closest(".plate");
     if (item) showPhoto(Number(item.dataset.index));
   });
 

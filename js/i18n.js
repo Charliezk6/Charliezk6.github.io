@@ -120,13 +120,11 @@ window.I18N = {
       playingMeta: "Stan Getz · João Gilberto",
       playingHref: "https://music.163.com/#/artist?id=94272555",
       readingLabel: "在读",
-      // TODO: fill in the book and author.
-      readingTitle: "书名待补",
-      readingMeta: "作者待补",
-      frameLabel: "最近一帧",
-      // TODO: point frameIndex at the latest photograph and name the place.
-      frameIndex: 13,
-      framePlace: "地点待补",
+      readingTitle: "亲密关系",
+      readingMeta: "Rowland S. Miller",
+      writingLabel: "在写",
+      writingTitle: "漂绿与审计师行业专长",
+      writingHref: "https://github.com/Charliezk6/Green-washing",
     },
     resume: {
       title: "履历",
@@ -327,13 +325,11 @@ window.I18N = {
       playingMeta: "Stan Getz · João Gilberto",
       playingHref: "https://music.163.com/#/artist?id=94272555",
       readingLabel: "Reading",
-      // TODO: fill in the book and author.
-      readingTitle: "Title to come",
-      readingMeta: "Author to come",
-      frameLabel: "Last frame",
-      // TODO: point frameIndex at the latest photograph and name the place.
-      frameIndex: 13,
-      framePlace: "Place to come",
+      readingTitle: "Intimate Relationships",
+      readingMeta: "Rowland S. Miller",
+      writingLabel: "Writing",
+      writingTitle: "Greenwashing and auditor specialization",
+      writingHref: "https://github.com/Charliezk6/Green-washing",
     },
     resume: {
       title: "Curriculum vitae",
