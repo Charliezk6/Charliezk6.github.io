@@ -497,36 +497,51 @@ input {
   content: "";
   position: absolute;
   inset: -1.5rem 0;
-  z-index: 2;
+  z-index: 0;
   pointer-events: none;
   background: radial-gradient(ellipse at 60% 42%, transparent 52%, rgba(6, 5, 4, 0.28) 100%);
 }
 
-.hero-score {
-  position: absolute;
-  top: 5.15rem;
-  left: 0;
-  z-index: 0;
-  width: min(22rem, 40%);
-  height: auto;
-  pointer-events: none;
-}
-
 .hero-marks {
   position: absolute;
-  z-index: 0;
-  inset: -34px -26px -22px -78px;
-  width: calc(100% + 104px);
-  height: calc(100% + 56px);
+  z-index: 3;
+  inset: -0.4rem;
   pointer-events: none;
-  opacity: 0.9;
-  animation: ink-breathe 14s ease-in-out infinite;
 }
 
-.hero-arc {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: ink-draw 18s cubic-bezier(0.45, 0.05, 0.2, 1) infinite alternate;
+.hero-marks span {
+  position: absolute;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 0 solid rgba(243, 239, 230, 0.46);
+}
+
+.hero-marks span:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.hero-marks span:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.hero-marks span:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.hero-marks span:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
 }
 
 .hero-layout {
@@ -996,15 +1011,19 @@ input {
 .computing-grid .work-media {
   position: relative;
   flex: none;
+  align-self: center;
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  min-height: 240px;
+  width: 66.67%;
+  min-height: 160px;
+  margin-inline: auto;
   background: #10100e;
 }
 
 .computing-grid .is-cinema .work-media {
   aspect-ratio: 16 / 9;
-  min-height: 220px;
+  width: 66.67%;
+  min-height: 120px;
 }
 
 .computing-grid .work-photo {
@@ -1879,15 +1898,6 @@ input {
   to { transform: scale(1.046); }
 }
 
-@keyframes ink-draw {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes ink-breathe {
-  0%, 100% { opacity: 0.72; }
-  50% { opacity: 1; }
-}
-
 @keyframes sheen {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
@@ -1949,12 +1959,6 @@ input {
     max-height: none;
   }
   .hero-papers { overflow: hidden; }
-  .hero-score { display: none; }
-  .hero-marks {
-    inset: -12px -8px -10px -8px;
-    width: calc(100% + 16px);
-    height: calc(100% + 22px);
-  }
   .scroll-cue { align-self: flex-start; }
   :lang(zh-CN) .name-zh { font-size: clamp(3.4rem, 18vw, 4.8rem); }
   :lang(en) .name-en { font-size: clamp(3.3rem, 16vw, 4.8rem); }
@@ -1983,6 +1987,7 @@ input {
   .role-word,
   .scroll-line-bar,
   .eq i,
+  .player-bar.is-on .eq i,
   .twinkle,
   .steam,
   .mark-sun,
@@ -1990,14 +1995,11 @@ input {
   .work-photo,
   .hero-slide,
   .hero-sheet,
-  .hero-arc,
-  .hero-marks,
   .doc-skeleton,
   .doc-skeleton-block {
     animation: none;
     transition: none;
   }
-  .hero-arc { stroke-dashoffset: 0; }
   .hero-slide {
     opacity: 0;
   }
