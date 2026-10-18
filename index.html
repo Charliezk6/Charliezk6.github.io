@@ -28,12 +28,13 @@
         /* storage unavailable */
       }
     </script>
+    <link rel="preload" href="assets/music/desafinado.m4a" as="audio" type="audio/mp4" />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <a class="skip" href="#home" data-i18n="nav.skip">跳到内容</a>
-    <audio id="site-audio" preload="none" playsinline></audio>
+    <audio id="site-audio" src="assets/music/desafinado.m4a" preload="auto" playsinline></audio>
 
     <header class="site-nav">
       <div class="nav-bar">
@@ -87,21 +88,6 @@
 
     <main>
       <section class="hero" id="home">
-        <svg class="hero-score" viewBox="0 0 360 124" fill="none" aria-hidden="true">
-          <g stroke="#f3efe6" stroke-width="1.15" stroke-linecap="round" vector-effect="non-scaling-stroke">
-            <path d="M8 42H118" opacity="0.4" />
-            <path d="M8 58H154" opacity="0.3" />
-            <path d="M8 74H102" opacity="0.22" />
-            <path d="M8 90H136" opacity="0.16" />
-            <path class="hero-arc" pathLength="100" d="M16 24C78 6 168 2 248 28" stroke="#e6d3ae" opacity="0.55" />
-            <path d="M118 42 L156 22" opacity="0.22" />
-          </g>
-          <g fill="#f3efe6" stroke="none">
-            <circle cx="118" cy="42" r="2.1" opacity="0.45" />
-            <circle cx="154" cy="58" r="1.6" opacity="0.32" />
-            <circle cx="156" cy="22" r="1.8" fill="#e6d3ae" opacity="0.5" />
-          </g>
-        </svg>
         <div class="hero-layout">
           <div class="hero-copy">
             <h1 class="name-reveal">
@@ -118,19 +104,7 @@
             </div>
           </div>
           <figure class="hero-frame" id="hero-frame" tabindex="0" aria-roledescription="carousel" data-i18n-aria="photo.carousel" aria-label="照片轮播">
-            <svg class="hero-marks" viewBox="0 0 500 640" fill="none" aria-hidden="true">
-              <g stroke="#f3efe6" stroke-width="1.15" stroke-linecap="round" vector-effect="non-scaling-stroke">
-                <path d="M36 78V36H78" opacity="0.55" />
-                <path d="M422 36H464V78" opacity="0.4" />
-                <path d="M36 562V604H78" opacity="0.3" />
-                <path d="M18 168C6 48 78 12 156 28" stroke="#e6d3ae" opacity="0.42" />
-                <path d="M156 28 L192 52" opacity="0.22" />
-              </g>
-              <g fill="#e6d3ae" stroke="none">
-                <circle cx="156" cy="28" r="2.2" opacity="0.55" />
-                <circle cx="192" cy="52" r="1.5" opacity="0.35" />
-              </g>
-            </svg>
+            <div class="hero-marks" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
             <div class="hero-papers">
               <img class="hero-sheet hero-sheet-back" id="hero-sheet-back" alt="" aria-hidden="true" />
               <img class="hero-sheet hero-sheet-mid" id="hero-sheet-mid" alt="" aria-hidden="true" />

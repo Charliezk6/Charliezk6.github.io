@@ -51,7 +51,6 @@
   let lang = readStoredLang();
   let photoIndex = 0;
   let lastFocus = null;
-  let audioReady = false;
 
   const esc = (value) =>
     String(value).replace(/[&<>"']/g, (ch) =>
@@ -402,13 +401,18 @@
       siteAudio.pause();
       return;
     }
-    if (!audioReady) {
-      siteAudio.preload = "none";
-      siteAudio.src = AUDIO_SRC;
-      audioReady = true;
-    }
     const played = siteAudio.play();
     if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+  };
+
+  const tryAutoplay = () => {
+    if (!siteAudio) return;
+    const played = siteAudio.play();
+    if (played && typeof played.catch === "function") {
+      played.then(() => setPlaying(true)).catch(() => {
+        /* Unmuted autoplay was blocked. The file is already buffered. */
+      });
+    }
   };
 
   const heroFrame = document.getElementById("hero-frame");
@@ -615,7 +619,7 @@
     const writing = document.getElementById("now-writing");
     if (writing && dict.now && dict.now.writingHref) writing.href = dict.now.writingHref;
     startHero();
-    setPlaying(siteAudio ? !siteAudio.paused && !siteAudio.ended && audioReady : false);
+    setPlaying(Boolean(siteAudio && !siteAudio.paused && !siteAudio.ended));
     if (window.SiteMotion) window.SiteMotion.mount(() => getDict(lang));
   };
 
@@ -694,10 +698,12 @@
   };
 
   if (siteAudio) {
-    siteAudio.preload = "none";
+    if (!siteAudio.getAttribute("src")) siteAudio.src = AUDIO_SRC;
+    siteAudio.preload = "auto";
     siteAudio.addEventListener("playing", () => setPlaying(true));
     siteAudio.addEventListener("pause", () => setPlaying(false));
     siteAudio.addEventListener("ended", () => setPlaying(false));
+    tryAutoplay();
   }
   if (playerFab) playerFab.addEventListener("click", toggleAudio);
 
