@@ -32,7 +32,9 @@ def render_first(path, dest):
 def compress(path):
     before = path.stat().st_size
     doc = fitz.open(path)
-    if hasattr(doc, "rewrite_images"):
+    # Certificates are one placed image plus vectors. Rewriting images
+    # drops the medal, ribbon, and seals and leaves a blank panel.
+    if "award" not in path.name and hasattr(doc, "rewrite_images"):
         doc.rewrite_images(dpi_threshold=110, quality=62)
     temp = path.with_suffix(".tmp.pdf")
     doc.save(temp, garbage=4, deflate=True, deflate_images=True, clean=True)
