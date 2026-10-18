@@ -80,7 +80,7 @@
       { kind: "pdf", src: "assets/docs/apmcm-award.pdf", preview: ["assets/docs/preview/apmcm-award.webp"] },
     ],
     [
-      { kind: "pdf", src: "assets/docs/huashu-paper-ebook.pdf", preview: ["assets/docs/preview/huashu-paper.webp"] },
+      { kind: "pdf", src: "assets/docs/huashu-paper.pdf", preview: ["assets/docs/preview/huashu-paper.webp"] },
       { kind: "image", src: "assets/docs/huashu-award.png", preview: ["assets/docs/preview/huashu-award.webp"] },
     ],
     [{ kind: "pdf", src: "assets/docs/xiong-award.pdf", preview: ["assets/docs/preview/xiong-award.webp"] }],
@@ -608,6 +608,10 @@
     }
     const playing = document.getElementById("now-playing");
     if (playing && dict.now && dict.now.playingHref) playing.href = dict.now.playingHref;
+    document.querySelectorAll("[data-instrument]").forEach((card) => {
+      const href = dict.music.links && dict.music.links[card.dataset.instrument];
+      if (typeof href === "string") card.setAttribute("href", href);
+    });
     const writing = document.getElementById("now-writing");
     if (writing && dict.now && dict.now.writingHref) writing.href = dict.now.writingHref;
     startHero();

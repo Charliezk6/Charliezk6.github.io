@@ -9,15 +9,19 @@
   const easeOut = (t) => 1 - (1 - t) ** 3;
   const motionQuery = () => window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  const splitName = (el) => {
+  const splitName = (el, base = 40) => {
     if (!el) return;
     const text = el.dataset.text || el.textContent || "";
     el.dataset.text = text;
+    const chars = [...text];
+    const count = chars.length;
     el.replaceChildren();
-    [...text].forEach((ch, index) => {
+    chars.forEach((ch, index) => {
       const span = document.createElement("span");
       span.className = "char";
-      span.style.setProperty("--d", `${index * 55}ms`);
+      const step = count < 4 ? 84 : 34;
+      const ease = count < 4 ? 0 : index * index * 4;
+      span.style.setProperty("--d", `${base + index * step + ease}ms`);
       span.textContent = ch === " " ? "\u00a0" : ch;
       el.appendChild(span);
     });
@@ -125,8 +129,11 @@
     },
     sync() {
       if (!abort) return;
-      splitName(document.querySelector(".name-zh"));
-      splitName(document.querySelector(".name-en"));
+      const zhName = document.querySelector(".name-zh");
+      const enName = document.querySelector(".name-en");
+      const englishFirst = document.documentElement.lang === "en";
+      splitName(englishFirst ? enName : zhName, 36);
+      splitName(englishFirst ? zhName : enName, englishFirst ? 280 : 210);
       roles = Array.isArray(getDict().hero.roles) ? getDict().hero.roles : [];
       roleIndex = 0;
       showRole(false);
