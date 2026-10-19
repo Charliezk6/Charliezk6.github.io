@@ -797,5 +797,156 @@
     if (event.key === "ArrowRight") showPhoto(photoIndex + 1);
   });
 
+  const mountSignature = () => {
+    const svg = document.querySelector(".hero-sign");
+    if (!svg || svg.dataset.mounted) return;
+    svg.dataset.mounted = "1";
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      svg.classList.remove("is-pending");
+      return;
+    }
+    const ink = svg.querySelector(".sign-ink");
+    const pens = [...svg.querySelectorAll(".sign-pen")];
+    const order = [0, 1, 2, 3, 4, 5, 10, 6, 9, 7, 8].filter((index) => pens[index]);
+    const ns = "http://www.w3.org/2000/svg";
+    const view = svg.viewBox.baseVal;
+    let defs = svg.querySelector("defs");
+    if (!defs) {
+      defs = document.createElementNS(ns, "defs");
+      svg.insertBefore(defs, svg.firstChild);
+    }
+    const strokes = order.map((index) => {
+      const pen = pens[index];
+      pen.removeAttribute("pathLength");
+      pen.removeAttribute("style");
+      pen.setAttribute("fill", "none");
+      pen.setAttribute("stroke", "#fff");
+      pen.setAttribute("stroke-linecap", "butt");
+      pen.setAttribute("stroke-linejoin", "round");
+      pen.setAttribute("stroke-width", "18");
+      const length = pen.getTotalLength();
+      pen.style.visibility = "hidden";
+      pen.style.strokeDasharray = `${length} ${length}`;
+      pen.style.strokeDashoffset = String(length);
+      const mask = document.createElementNS(ns, "mask");
+      mask.id = `sign-mask-${index}`;
+      mask.setAttribute("maskUnits", "userSpaceOnUse");
+      mask.setAttribute("x", "0");
+      mask.setAttribute("y", "0");
+      mask.setAttribute("width", String(view.width || 877));
+      mask.setAttribute("height", String(view.height || 482));
+      const rect = document.createElementNS(ns, "rect");
+      rect.setAttribute("x", "0");
+      rect.setAttribute("y", "0");
+      rect.setAttribute("width", String(view.width || 877));
+      rect.setAttribute("height", String(view.height || 482));
+      rect.setAttribute("fill", "#000");
+      mask.appendChild(rect);
+      mask.appendChild(pen);
+      defs.appendChild(mask);
+      const clone = ink.cloneNode(true);
+      clone.setAttribute("mask", `url(#sign-mask-${index})`);
+      svg.appendChild(clone);
+      return { pen, length };
+    });
+    ink.remove();
+    svg.classList.remove("is-pending");
+
+    const pauses = strokes.slice(0, -1).map((stroke, index) => {
+      const from = stroke.pen.getPointAtLength(stroke.length);
+      const to = strokes[index + 1].pen.getPointAtLength(0);
+      const distance = Math.hypot(to.x - from.x, to.y - from.y);
+      return Math.round(Math.min(120, Math.max(40, 34 + distance * 0.2)));
+    });
+    const pauseSum = pauses.reduce((sum, value) => sum + value, 0);
+    const total = 3250;
+    const drawBudget = Math.max(1600, total - pauseSum);
+    const totalLen = strokes.reduce((sum, stroke) => sum + stroke.length, 0);
+    let covered = 0;
+    strokes.forEach((stroke, index) => {
+      covered += stroke.length;
+      stroke.pause = pauses[index] || 0;
+      stroke.before = covered - stroke.length;
+    });
+
+    const nameEnd = () => {
+      const chars = [...document.querySelectorAll(".name-zh .char")];
+      if (!chars.length) return 1270;
+      return Math.max(
+        ...chars.map((ch) => (parseFloat(ch.style.getPropertyValue("--d")) || 0) + 1150)
+      );
+    };
+    const startAt = performance.now() + nameEnd() + 800;
+    svg.dataset.signAt = String(startAt);
+
+    const paint = (shown) => {
+      strokes.forEach((stroke) => {
+        const drawn = shown - stroke.before;
+        if (drawn <= 0.8) {
+          stroke.pen.style.visibility = "hidden";
+          stroke.pen.style.strokeDashoffset = String(stroke.length);
+          return;
+        }
+        stroke.pen.style.visibility = "visible";
+        const offset = Math.max(stroke.length - drawn, 0);
+        stroke.pen.style.strokeDasharray = `${stroke.length} ${stroke.length}`;
+        stroke.pen.style.strokeDashoffset = String(offset);
+      });
+    };
+    paint(0);
+
+    let drawClock = 0;
+    let pauseLeft = 0;
+    let index = 0;
+    let last = performance.now();
+    const tick = (now) => {
+      const dt = Math.min(48, now - last);
+      last = now;
+      if (now < startAt) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      if (pauseLeft > 0) {
+        pauseLeft -= dt;
+        requestAnimationFrame(tick);
+        return;
+      }
+      const stroke = strokes[index];
+      drawClock = Math.min(drawBudget, drawClock + dt);
+      const shown = easeSign(Math.min(drawClock / drawBudget, 1)) * totalLen;
+      const end = stroke.before + stroke.length;
+      paint(Math.min(shown, end));
+      if (shown >= end - 0.4 || drawClock >= drawBudget - 0.5) {
+        drawClock = easeInverse(end / totalLen) * drawBudget;
+        paint(end);
+        if (index >= strokes.length - 1) {
+          paint(totalLen);
+          return;
+        }
+        pauseLeft = stroke.pause;
+        index += 1;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const easeSign = (t) => {
+    const smooth = t * t * (3 - 2 * t);
+    return 0.45 * t + 0.55 * smooth;
+  };
+  const easeInverse = (y) => {
+    let lo = 0;
+    let hi = 1;
+    for (let step = 0; step < 24; step += 1) {
+      const mid = (lo + hi) / 2;
+      if (easeSign(mid) < y) lo = mid;
+      else hi = mid;
+    }
+    return (lo + hi) / 2;
+  };
+
   applyLang(lang);
+  mountSignature();
 })();
