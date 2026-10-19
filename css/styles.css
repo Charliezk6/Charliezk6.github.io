@@ -502,6 +502,31 @@ input {
   background: radial-gradient(ellipse at 60% 42%, transparent 52%, rgba(6, 5, 4, 0.28) 100%);
 }
 
+.hero-sign {
+  position: absolute;
+  z-index: 0;
+  left: 2%;
+  bottom: 6%;
+  width: min(58rem, 82%);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.14;
+  transform: rotate(-6deg);
+  transform-origin: 8% 90%;
+}
+
+.hero-sign path {
+  fill: none;
+  stroke: #f3efe6;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: sign-write 0.95s cubic-bezier(0.42, 0.05, 0.18, 1) forwards;
+  animation-delay: calc(var(--i) * 0.28s);
+}
+
 .hero-marks {
   position: absolute;
   z-index: 3;
@@ -558,13 +583,15 @@ input {
 
 .hero-copy {
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  min-width: 0;
   justify-self: stretch;
 }
 
 .name-reveal {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
   margin: 1.1rem 0 0.85rem;
 }
 
@@ -588,7 +615,7 @@ input {
 }
 
 :lang(en) .name-en {
-  font-size: clamp(4.6rem, 8vw, 7.5rem);
+  font-size: clamp(2.6rem, 8vw, 7.5rem);
   font-style: italic;
   line-height: 0.88;
   letter-spacing: -0.035em;
@@ -713,10 +740,12 @@ input {
 
 .hero-frame {
   position: relative;
+  z-index: 1;
   justify-self: start;
   width: min(100%, 26rem);
   margin: 0;
   outline: none;
+  background: #0c0b0a;
 }
 
 .hero-frame:focus-visible {
@@ -761,10 +790,11 @@ input {
 
 .hero-stage {
   position: relative;
+  z-index: 1;
   height: min(58vh, 520px);
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #141311;
+  background: #0c0b0a;
 }
 
 .hero-slide {
@@ -999,7 +1029,7 @@ input {
 }
 
 .computing-grid .is-cinema {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 .computing-grid .work-card {
@@ -1008,22 +1038,17 @@ input {
   height: 100%;
 }
 
-.computing-grid .work-media {
+.computing-grid .work-media,
+.computing-grid .is-cinema .work-media {
   position: relative;
   flex: none;
   align-self: center;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  width: 66.67%;
-  min-height: 160px;
-  margin-inline: auto;
-  background: #10100e;
-}
-
-.computing-grid .is-cinema .work-media {
   aspect-ratio: 16 / 9;
   width: 66.67%;
-  min-height: 120px;
+  min-height: 0;
+  margin-inline: auto;
+  background: #0b0a08;
 }
 
 .computing-grid .work-photo {
@@ -1898,6 +1923,10 @@ input {
   to { transform: scale(1.046); }
 }
 
+@keyframes sign-write {
+  to { stroke-dashoffset: 0; }
+}
+
 @keyframes sheen {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
@@ -1960,8 +1989,18 @@ input {
   }
   .hero-papers { overflow: hidden; }
   .scroll-cue { align-self: flex-start; }
+  .hero-sign {
+    left: 0;
+    bottom: 2%;
+    width: 78%;
+    opacity: 0.1;
+  }
   :lang(zh-CN) .name-zh { font-size: clamp(3.4rem, 18vw, 4.8rem); }
-  :lang(en) .name-en { font-size: clamp(3.3rem, 16vw, 4.8rem); }
+  :lang(en) .name-en {
+    font-size: clamp(2.2rem, 8.6vw, 3.35rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
 }
 
 @media (max-width: 1239px) {
@@ -1995,6 +2034,7 @@ input {
   .work-photo,
   .hero-slide,
   .hero-sheet,
+  .hero-sign path,
   .doc-skeleton,
   .doc-skeleton-block {
     animation: none;
@@ -2006,5 +2046,8 @@ input {
   .hero-slide.is-current {
     animation: none;
     opacity: 1;
+  }
+  .hero-sign path {
+    stroke-dashoffset: 0;
   }
 }
