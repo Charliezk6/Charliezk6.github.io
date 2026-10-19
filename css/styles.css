@@ -503,28 +503,32 @@ input {
 }
 
 .hero-sign {
+  --sign-start: 2.07s;
   position: absolute;
-  z-index: 0;
-  left: 2%;
-  bottom: 6%;
-  width: min(58rem, 82%);
-  height: auto;
+  z-index: -1;
+  left: 1%;
+  top: 3%;
+  width: 98%;
+  height: 90%;
   pointer-events: none;
-  opacity: 0.14;
+  opacity: 0.12;
   transform: rotate(-6deg);
-  transform-origin: 8% 90%;
+  transform-origin: 46% 58%;
 }
 
-.hero-sign path {
-  fill: none;
-  stroke: #f3efe6;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: sign-write 0.95s cubic-bezier(0.42, 0.05, 0.18, 1) forwards;
-  animation-delay: calc(var(--i) * 0.28s);
+:lang(en) .hero-sign {
+  --sign-start: 2.52s;
+}
+
+.hero-sign .sign-pen {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation-name: sign-write;
+  animation-duration: var(--dur);
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-delay: calc(var(--sign-start) + var(--lag));
 }
 
 .hero-marks {
@@ -582,6 +586,8 @@ input {
 }
 
 .hero-copy {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -1042,13 +1048,15 @@ input {
 .computing-grid .is-cinema .work-media {
   position: relative;
   flex: none;
-  align-self: center;
+  align-self: stretch;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  width: 66.67%;
+  width: 100%;
   min-height: 0;
-  margin-inline: auto;
-  background: #0b0a08;
+  margin: 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  background: transparent;
 }
 
 .computing-grid .work-photo {
@@ -1937,7 +1945,12 @@ input {
   .now-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .now-card + .now-card { border-left: 1px solid var(--line); }
   .music-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .computing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .computing-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .computing-grid .work-card:nth-child(1) { grid-column: 2 / span 2; }
+  .computing-grid .work-card:nth-child(2) { grid-column: 1 / span 2; }
+  .computing-grid .work-card:nth-child(3) { grid-column: 3 / span 2; }
 }
 
 @media (min-width: 1100px) {
@@ -1990,10 +2003,11 @@ input {
   .hero-papers { overflow: hidden; }
   .scroll-cue { align-self: flex-start; }
   .hero-sign {
-    left: 0;
-    bottom: 2%;
-    width: 78%;
-    opacity: 0.1;
+    left: 5%;
+    top: 3%;
+    width: 90%;
+    height: 92%;
+    opacity: 0.09;
   }
   :lang(zh-CN) .name-zh { font-size: clamp(3.4rem, 18vw, 4.8rem); }
   :lang(en) .name-en {
@@ -2034,7 +2048,7 @@ input {
   .work-photo,
   .hero-slide,
   .hero-sheet,
-  .hero-sign path,
+  .hero-sign .sign-pen,
   .doc-skeleton,
   .doc-skeleton-block {
     animation: none;
@@ -2047,7 +2061,8 @@ input {
     animation: none;
     opacity: 1;
   }
-  .hero-sign path {
+  .hero-sign .sign-pen {
+    animation: none;
     stroke-dashoffset: 0;
   }
 }
