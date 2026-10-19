@@ -124,9 +124,9 @@
 
   const renderComputing = (dict) => {
     const covers = [
-      { src: "assets/computing/modeling.webp", w: 1152, h: 864 },
-      { src: "assets/computing/lighting.webp", w: 1152, h: 864 },
-      { src: "assets/computing/llm.webp", w: 1280, h: 720, wide: true },
+      { src: "assets/computing/modeling.webp", w: 1280, h: 720 },
+      { src: "assets/computing/lighting.webp", w: 1280, h: 720 },
+      { src: "assets/computing/llm.webp", w: 1280, h: 720 },
     ];
     computingEl.innerHTML = dict.computing.items
       .map((item, index) => {
@@ -419,7 +419,7 @@
   const heroSlides = [document.getElementById("hero-slide-a"), document.getElementById("hero-slide-b")];
   const heroSheetBack = document.getElementById("hero-sheet-back");
   const heroSheetMid = document.getElementById("hero-sheet-mid");
-  let heroIndex = 13;
+  let heroIndex = 0;
   let heroSlot = 0;
   let heroTimer = 0;
   let heroPaused = false;

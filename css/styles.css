@@ -502,6 +502,35 @@ input {
   background: radial-gradient(ellipse at 60% 42%, transparent 52%, rgba(6, 5, 4, 0.28) 100%);
 }
 
+.hero-sign {
+  --sign-start: 2.07s;
+  position: absolute;
+  z-index: -1;
+  left: 1%;
+  top: 3%;
+  width: 98%;
+  height: 90%;
+  pointer-events: none;
+  opacity: 0.12;
+  transform: rotate(-6deg);
+  transform-origin: 46% 58%;
+}
+
+:lang(en) .hero-sign {
+  --sign-start: 2.52s;
+}
+
+.hero-sign .sign-pen {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation-name: sign-write;
+  animation-duration: var(--dur);
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-delay: calc(var(--sign-start) + var(--lag));
+}
+
 .hero-marks {
   position: absolute;
   z-index: 3;
@@ -557,14 +586,18 @@ input {
 }
 
 .hero-copy {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  min-width: 0;
   justify-self: stretch;
 }
 
 .name-reveal {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
   margin: 1.1rem 0 0.85rem;
 }
 
@@ -588,7 +621,7 @@ input {
 }
 
 :lang(en) .name-en {
-  font-size: clamp(4.6rem, 8vw, 7.5rem);
+  font-size: clamp(2.6rem, 8vw, 7.5rem);
   font-style: italic;
   line-height: 0.88;
   letter-spacing: -0.035em;
@@ -713,10 +746,12 @@ input {
 
 .hero-frame {
   position: relative;
+  z-index: 1;
   justify-self: start;
   width: min(100%, 26rem);
   margin: 0;
   outline: none;
+  background: #0c0b0a;
 }
 
 .hero-frame:focus-visible {
@@ -761,10 +796,11 @@ input {
 
 .hero-stage {
   position: relative;
+  z-index: 1;
   height: min(58vh, 520px);
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #141311;
+  background: #0c0b0a;
 }
 
 .hero-slide {
@@ -999,7 +1035,7 @@ input {
 }
 
 .computing-grid .is-cinema {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 .computing-grid .work-card {
@@ -1008,22 +1044,19 @@ input {
   height: 100%;
 }
 
-.computing-grid .work-media {
+.computing-grid .work-media,
+.computing-grid .is-cinema .work-media {
   position: relative;
   flex: none;
-  align-self: center;
+  align-self: stretch;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  width: 66.67%;
-  min-height: 160px;
-  margin-inline: auto;
-  background: #10100e;
-}
-
-.computing-grid .is-cinema .work-media {
   aspect-ratio: 16 / 9;
-  width: 66.67%;
-  min-height: 120px;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  background: transparent;
 }
 
 .computing-grid .work-photo {
@@ -1898,6 +1931,10 @@ input {
   to { transform: scale(1.046); }
 }
 
+@keyframes sign-write {
+  to { stroke-dashoffset: 0; }
+}
+
 @keyframes sheen {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
@@ -1908,7 +1945,12 @@ input {
   .now-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .now-card + .now-card { border-left: 1px solid var(--line); }
   .music-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .computing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .computing-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .computing-grid .work-card:nth-child(1) { grid-column: 2 / span 2; }
+  .computing-grid .work-card:nth-child(2) { grid-column: 1 / span 2; }
+  .computing-grid .work-card:nth-child(3) { grid-column: 3 / span 2; }
 }
 
 @media (min-width: 1100px) {
@@ -1960,8 +2002,19 @@ input {
   }
   .hero-papers { overflow: hidden; }
   .scroll-cue { align-self: flex-start; }
+  .hero-sign {
+    left: 5%;
+    top: 3%;
+    width: 90%;
+    height: 92%;
+    opacity: 0.09;
+  }
   :lang(zh-CN) .name-zh { font-size: clamp(3.4rem, 18vw, 4.8rem); }
-  :lang(en) .name-en { font-size: clamp(3.3rem, 16vw, 4.8rem); }
+  :lang(en) .name-en {
+    font-size: clamp(2.2rem, 8.6vw, 3.35rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
 }
 
 @media (max-width: 1239px) {
@@ -1995,6 +2048,7 @@ input {
   .work-photo,
   .hero-slide,
   .hero-sheet,
+  .hero-sign .sign-pen,
   .doc-skeleton,
   .doc-skeleton-block {
     animation: none;
@@ -2006,5 +2060,9 @@ input {
   .hero-slide.is-current {
     animation: none;
     opacity: 1;
+  }
+  .hero-sign .sign-pen {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
