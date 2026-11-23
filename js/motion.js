@@ -98,6 +98,28 @@
     signal.addEventListener("abort", () => observer.disconnect());
   };
 
+  const bindWish = (signal) => {
+    const el = document.querySelector(".footer-wish");
+    if (!el) return;
+    if (reduce) {
+      el.classList.add("is-in");
+      return;
+    }
+    el.classList.remove("is-in");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          el.classList.add("is-in");
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.55 }
+    );
+    observer.observe(el);
+    signal.addEventListener("abort", () => observer.disconnect());
+  };
+
   const bindRoles = () => {
     window.clearInterval(roleTimer);
     if (reduce || roles.length < 2) return;
@@ -124,6 +146,7 @@
       );
       bindNav(signal);
       bindCounts(signal);
+      bindWish(signal);
       signal.addEventListener("abort", () => window.clearInterval(roleTimer));
       this.sync();
     },

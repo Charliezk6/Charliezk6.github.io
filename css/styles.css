@@ -25,6 +25,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
+  overflow-x: clip;
   background: var(--canvas);
 }
 
@@ -477,6 +478,11 @@ input {
   animation: eq-bar 0.9s ease-in-out infinite;
 }
 
+.player-bar.is-live .eq i {
+  animation: none;
+  transition: height 90ms linear;
+}
+
 .player-bar.is-on .eq i:nth-child(2) { animation-delay: 0.12s; }
 .player-bar.is-on .eq i:nth-child(3) { animation-delay: 0.24s; }
 .player-bar.is-on .eq i:nth-child(4) { animation-delay: 0.08s; }
@@ -484,8 +490,10 @@ input {
 .hero {
   position: relative;
   display: flex;
-  width: min(1240px, calc(100% - 3rem));
+  width: 100%;
   min-height: 100dvh;
+  overflow: clip;
+  isolation: isolate;
   flex-direction: column;
   justify-content: space-between;
   gap: 1.5rem;
@@ -504,15 +512,15 @@ input {
 
 .hero-sign {
   position: absolute;
-  z-index: -1;
-  left: 1%;
-  top: 3%;
-  width: 98%;
-  height: 90%;
+  z-index: 0;
+  left: 50%;
+  top: 48%;
+  width: min(94vw, 1720px);
+  height: min(88dvh, 920px);
   pointer-events: none;
-  opacity: 0.12;
-  transform: rotate(-6deg);
-  transform-origin: 46% 58%;
+  opacity: calc(var(--sign-base, 0.145) + var(--audio-breath, 0));
+  transform: translate(-50%, -50%) rotate(-6deg);
+  transform-origin: center;
 }
 
 html.js .hero-sign.is-pending {
@@ -570,7 +578,8 @@ html.js .hero-sign.is-pending {
   align-items: center;
   justify-content: center;
   gap: clamp(2rem, 5vw, 5rem);
-  width: 100%;
+  width: min(1240px, calc(100% - 3rem));
+  margin-inline: auto;
 }
 
 .hero-copy {
@@ -809,6 +818,46 @@ html.js .hero-sign.is-pending {
   animation: ken 3.4s cubic-bezier(0.33, 0, 0.15, 1) forwards;
 }
 
+.hero-slide.is-landscape,
+.hero-slide.is-landscape.is-current {
+  object-fit: contain;
+  background: #0c0b0a;
+  transform: none;
+  animation: none;
+}
+
+.hero-stage {
+  cursor: zoom-in;
+}
+
+.hero-caption {
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+  margin: 0.7rem 0 0;
+  color: var(--quiet);
+}
+
+.hero-count {
+  flex: none;
+  color: var(--amber);
+  font-family: var(--display-en);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+.hero-cap {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+:lang(en) .hero-cap {
+  color: var(--muted);
+  font-family: var(--display-en);
+  font-size: 1rem;
+  font-style: italic;
+}
+
 .hero-controls {
   position: absolute;
   right: 0.6rem;
@@ -1016,6 +1065,32 @@ html.js .hero-sign.is-pending {
   z-index: 1;
   padding: 1.15rem 1rem 1rem;
   background: linear-gradient(to top, rgba(8, 7, 6, 0.78), transparent 85%);
+}
+
+.work-whisper {
+  display: block;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  color: var(--amber-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(0.25rem);
+  transition:
+    opacity 280ms var(--ease),
+    transform 280ms var(--ease),
+    max-height 280ms var(--ease),
+    margin-top 280ms var(--ease);
+}
+
+.music-grid .work-card:hover .work-whisper,
+.music-grid .work-card:focus-visible .work-whisper {
+  max-height: 3.2rem;
+  margin-top: 0.35rem;
+  opacity: 1;
+  transform: none;
 }
 
 .computing-grid {
@@ -1285,6 +1360,25 @@ html.js .hero-sign.is-pending {
   grid-template-columns: 1fr;
 }
 
+.now-live {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--amber);
+  animation: now-breathe 4.5s ease-in-out infinite;
+}
+
+.now-fresh {
+  color: var(--quiet);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+
+:lang(zh-CN) .now-fresh {
+  letter-spacing: 0.28em;
+}
+
 .now-card {
   display: flex;
   min-width: 0;
@@ -1300,6 +1394,12 @@ html.js .hero-sign.is-pending {
   text-align: left;
   text-decoration: none;
   cursor: pointer;
+  transition: border-color 240ms var(--ease);
+}
+
+.now-card:hover,
+.now-card:focus-visible {
+  border-top-color: var(--amber);
 }
 
 .now-label {
@@ -1331,6 +1431,20 @@ html.js .hero-sign.is-pending {
 .now-meta {
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.now-note {
+  color: var(--quiet);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  opacity: 0.7;
+  transition: opacity 240ms var(--ease), color 240ms var(--ease);
+}
+
+.now-card:hover .now-note,
+.now-card:focus-visible .now-note {
+  color: var(--muted);
+  opacity: 1;
 }
 
 .stats-grid {
@@ -1411,6 +1525,30 @@ html.js .hero-sign.is-pending {
 
 .footer-mail:hover {
   color: var(--amber-soft);
+}
+
+.footer-wish {
+  margin: 1.35rem 0 0;
+  color: var(--amber-soft);
+  font-family: "Ma Shan Zheng", "Noto Serif SC", cursive;
+  font-size: clamp(2.5rem, 5.4vw, 3.8rem);
+  line-height: 1.15;
+  letter-spacing: 0.12em;
+}
+
+:lang(en) .footer-wish {
+  font-family: "Caveat", "Instrument Serif", cursive;
+  font-size: clamp(2.2rem, 4.6vw, 3.3rem);
+  font-style: normal;
+  letter-spacing: 0.01em;
+}
+
+html.js .footer-wish {
+  opacity: 0;
+}
+
+html.js .footer-wish.is-in {
+  animation: wish-in 1.1s var(--ease) forwards;
 }
 
 .footer-bar {
@@ -1515,6 +1653,11 @@ html.js .hero-sign.is-pending {
   padding: 0.4rem 1.35rem 2.4rem;
 }
 
+.resume-intro {
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+
 .edu-school {
   margin: 0.6rem 0 0;
   font-size: 1.05rem;
@@ -1531,8 +1674,27 @@ html.js .hero-sign.is-pending {
 }
 
 .skills {
-  margin: 0.9rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0 0;
   color: var(--quiet);
+}
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.research-item .doc-keys {
+  margin-top: 0.75rem;
 }
 
 .resume-scroll h3 {
@@ -1919,6 +2081,16 @@ html.js .hero-sign.is-pending {
   to { transform: scale(1.046); }
 }
 
+@keyframes now-breathe {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 1; }
+}
+
+@keyframes wish-in {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
 @keyframes sheen {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
@@ -1960,6 +2132,15 @@ html.js .hero-sign.is-pending {
 
 }
 
+@media (max-width: 959px), (hover: none) {
+  .work-whisper {
+    max-height: 3.2rem;
+    margin-top: 0.3rem;
+    opacity: 0.92;
+    transform: none;
+  }
+}
+
 @media (max-width: 959px) {
   .hero {
     width: 100%;
@@ -1970,6 +2151,8 @@ html.js .hero-sign.is-pending {
   :lang(zh-CN) .hero-layout,
   :lang(en) .hero-layout {
     display: flex;
+    width: 100%;
+    margin-inline: 0;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -1987,11 +2170,12 @@ html.js .hero-sign.is-pending {
   .hero-papers { overflow: hidden; }
   .scroll-cue { align-self: flex-start; }
   .hero-sign {
-    left: 5%;
-    top: 3%;
-    width: 90%;
-    height: 92%;
-    opacity: 0.09;
+    top: 6.2rem;
+    width: 122vw;
+    height: auto;
+    aspect-ratio: 877 / 482;
+    --sign-base: 0.12;
+    transform: translate(-50%, 0) rotate(-6deg);
   }
   :lang(zh-CN) .name-zh { font-size: clamp(3.4rem, 18vw, 4.8rem); }
   :lang(en) .name-en {
@@ -2025,6 +2209,8 @@ html.js .hero-sign.is-pending {
   .scroll-line-bar,
   .eq i,
   .player-bar.is-on .eq i,
+  .player-bar.is-live .eq i,
+  .now-live,
   .twinkle,
   .steam,
   .mark-sun,
@@ -2043,5 +2229,10 @@ html.js .hero-sign.is-pending {
   .hero-slide.is-current {
     animation: none;
     opacity: 1;
+  }
+  html.js .footer-wish {
+    opacity: 1;
+    clip-path: none;
+    animation: none;
   }
 }
