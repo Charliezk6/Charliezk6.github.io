@@ -797,6 +797,51 @@
     if (event.key === "ArrowRight") showPhoto(photoIndex + 1);
   });
 
+  const easeStroke = (t) => t * t * (3 - 2 * t);
+
+  const corner = (a, b, c) => {
+    const ux = b.x - a.x;
+    const uy = b.y - a.y;
+    const vx = c.x - b.x;
+    const vy = c.y - b.y;
+    const cross = Math.hypot(ux, uy) * Math.hypot(vx, vy) || 1;
+    const dot = Math.min(1, Math.max(-1, (ux * vx + uy * vy) / cross));
+    return Math.acos(dot);
+  };
+
+  const samplePace = (pen, length) => {
+    const count = Math.max(32, Math.round(length / 8));
+    const points = [];
+    for (let i = 0; i <= count; i += 1) points.push(pen.getPointAtLength((length * i) / count));
+    const weights = [];
+    for (let i = 0; i < count; i += 1) {
+      const turn = i === 0 || i === count - 1 ? 0 : corner(points[i - 1], points[i], points[i + 1]);
+      const sharp = Math.min(turn / 1.35, 1);
+      const edge = Math.min(i, count - 1 - i) / 8;
+      const ends = edge >= 1 ? 1 : 0.55 + 0.45 * edge;
+      weights.push(ends * (1 + sharp * 2.4));
+    }
+    const cum = [0];
+    for (let i = 0; i < count; i += 1) cum.push(cum[i] + weights[i]);
+    const sum = cum[count] || 1;
+    return cum.map((value) => value / sum);
+  };
+
+  const paceAt = (cum, t) => {
+    const last = cum.length - 1;
+    let lo = 0;
+    let hi = last;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (cum[mid] < t) lo = mid + 1;
+      else hi = mid;
+    }
+    const index = Math.max(lo, 1);
+    const span = cum[index] - cum[index - 1] || 1;
+    const f = Math.min(1, Math.max(0, (t - cum[index - 1]) / span));
+    return (index - 1 + f) / last;
+  };
+
   const mountSignature = () => {
     const svg = document.querySelector(".hero-sign");
     if (!svg || svg.dataset.mounted) return;
@@ -806,100 +851,48 @@
       svg.classList.remove("is-pending");
       return;
     }
-    const ink = svg.querySelector(".sign-ink");
-    const pens = [...svg.querySelectorAll(".sign-pen")];
-    const order = [0, 1, 2, 3, 4, 5, 10, 6, 9, 7, 8].filter((index) => pens[index]);
-    const ns = "http://www.w3.org/2000/svg";
-    const view = svg.viewBox.baseVal;
-    let defs = svg.querySelector("defs");
-    if (!defs) {
-      defs = document.createElementNS(ns, "defs");
-      svg.insertBefore(defs, svg.firstChild);
-    }
-    const strokes = order.map((index) => {
-      const pen = pens[index];
-      pen.removeAttribute("pathLength");
-      pen.removeAttribute("style");
-      pen.setAttribute("fill", "none");
-      pen.setAttribute("stroke", "#fff");
-      pen.setAttribute("stroke-linecap", "butt");
-      pen.setAttribute("stroke-linejoin", "round");
-      pen.setAttribute("stroke-width", "18");
+    const strokes = [...svg.querySelectorAll(".sign-pen")].map((pen) => {
       const length = pen.getTotalLength();
+      const gap = Math.ceil(length + 160);
+      pen.style.strokeDashoffset = "0";
+      pen.style.strokeDasharray = `0 ${gap}`;
       pen.style.visibility = "hidden";
-      pen.style.strokeDasharray = `${length} ${length}`;
-      pen.style.strokeDashoffset = String(length);
-      const mask = document.createElementNS(ns, "mask");
-      mask.id = `sign-mask-${index}`;
-      mask.setAttribute("maskUnits", "userSpaceOnUse");
-      mask.setAttribute("x", "0");
-      mask.setAttribute("y", "0");
-      mask.setAttribute("width", String(view.width || 877));
-      mask.setAttribute("height", String(view.height || 482));
-      const rect = document.createElementNS(ns, "rect");
-      rect.setAttribute("x", "0");
-      rect.setAttribute("y", "0");
-      rect.setAttribute("width", String(view.width || 877));
-      rect.setAttribute("height", String(view.height || 482));
-      rect.setAttribute("fill", "#000");
-      mask.appendChild(rect);
-      mask.appendChild(pen);
-      defs.appendChild(mask);
-      const clone = ink.cloneNode(true);
-      clone.setAttribute("mask", `url(#sign-mask-${index})`);
-      svg.appendChild(clone);
-      return { pen, length };
+      return { pen, length, gap, pace: samplePace(pen, length) };
     });
-    ink.remove();
-    svg.classList.remove("is-pending");
-
-    const pauses = strokes.slice(0, -1).map((stroke, index) => {
-      const from = stroke.pen.getPointAtLength(stroke.length);
-      const to = strokes[index + 1].pen.getPointAtLength(0);
-      const distance = Math.hypot(to.x - from.x, to.y - from.y);
-      return Math.round(Math.min(120, Math.max(40, 34 + distance * 0.2)));
-    });
-    const pauseSum = pauses.reduce((sum, value) => sum + value, 0);
-    const total = 3250;
-    const drawBudget = Math.max(1600, total - pauseSum);
-    const totalLen = strokes.reduce((sum, stroke) => sum + stroke.length, 0);
-    let covered = 0;
-    strokes.forEach((stroke, index) => {
-      covered += stroke.length;
-      stroke.pause = pauses[index] || 0;
-      stroke.before = covered - stroke.length;
-    });
+    if (!strokes.length) {
+      svg.classList.remove("is-pending");
+      return;
+    }
 
     const nameEnd = () => {
-      const chars = [...document.querySelectorAll(".name-zh .char")];
+      const chars = [...document.querySelectorAll(".name-reveal .char")];
       if (!chars.length) return 1270;
       return Math.max(
         ...chars.map((ch) => (parseFloat(ch.style.getPropertyValue("--d")) || 0) + 1150)
       );
     };
+    const pause = 110;
+    const budget = 2590;
+    const totalLen = strokes.reduce((sum, stroke) => sum + stroke.length, 0);
     const startAt = performance.now() + nameEnd() + 800;
     svg.dataset.signAt = String(startAt);
 
-    const paint = (shown) => {
-      strokes.forEach((stroke) => {
-        const drawn = shown - stroke.before;
-        if (drawn <= 0.8) {
-          stroke.pen.style.visibility = "hidden";
-          stroke.pen.style.strokeDashoffset = String(stroke.length);
-          return;
-        }
-        stroke.pen.style.visibility = "visible";
-        const offset = Math.max(stroke.length - drawn, 0);
-        stroke.pen.style.strokeDasharray = `${stroke.length} ${stroke.length}`;
-        stroke.pen.style.strokeDashoffset = String(offset);
-      });
+    const paint = (stroke, drawn) => {
+      if (drawn <= 1.2) {
+        stroke.pen.style.visibility = "hidden";
+        stroke.pen.style.strokeDasharray = `0 ${stroke.gap}`;
+        return;
+      }
+      stroke.pen.style.visibility = "visible";
+      const shown = Math.min(drawn, stroke.length);
+      stroke.pen.style.strokeDasharray = `${shown.toFixed(2)} ${stroke.gap}`;
     };
-    paint(0);
 
     let drawClock = 0;
-    let pauseLeft = 0;
     let index = 0;
+    let pauseLeft = 0;
     let last = performance.now();
+    let opened = false;
     const tick = (now) => {
       const dt = Math.min(48, now - last);
       last = now;
@@ -907,44 +900,31 @@
         requestAnimationFrame(tick);
         return;
       }
+      if (!opened) {
+        svg.classList.remove("is-pending");
+        opened = true;
+      }
       if (pauseLeft > 0) {
         pauseLeft -= dt;
         requestAnimationFrame(tick);
         return;
       }
       const stroke = strokes[index];
-      drawClock = Math.min(drawBudget, drawClock + dt);
-      const shown = easeSign(Math.min(drawClock / drawBudget, 1)) * totalLen;
-      const end = stroke.before + stroke.length;
-      paint(Math.min(shown, end));
-      if (shown >= end - 0.4 || drawClock >= drawBudget - 0.5) {
-        drawClock = easeInverse(end / totalLen) * drawBudget;
-        paint(end);
-        if (index >= strokes.length - 1) {
-          paint(totalLen);
-          return;
-        }
-        pauseLeft = stroke.pause;
+      const share = (stroke.length / totalLen) * budget;
+      drawClock = Math.min(share, drawClock + dt);
+      const drawn = paceAt(stroke.pace, easeStroke(Math.min(drawClock / share, 1))) * stroke.length;
+      paint(stroke, drawn);
+      if (drawClock >= share - 0.4) {
+        stroke.pen.style.visibility = "visible";
+        stroke.pen.style.strokeDasharray = "none";
+        if (index >= strokes.length - 1) return;
+        pauseLeft = pause;
+        drawClock = 0;
         index += 1;
       }
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-  };
-
-  const easeSign = (t) => {
-    const smooth = t * t * (3 - 2 * t);
-    return 0.45 * t + 0.55 * smooth;
-  };
-  const easeInverse = (y) => {
-    let lo = 0;
-    let hi = 1;
-    for (let step = 0; step < 24; step += 1) {
-      const mid = (lo + hi) / 2;
-      if (easeSign(mid) < y) lo = mid;
-      else hi = mid;
-    }
-    return (lo + hi) / 2;
   };
 
   applyLang(lang);

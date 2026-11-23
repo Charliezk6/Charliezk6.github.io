@@ -503,7 +503,6 @@ input {
 }
 
 .hero-sign {
-  --sign-start: 2.07s;
   position: absolute;
   z-index: -1;
   left: 1%;
@@ -516,11 +515,7 @@ input {
   transform-origin: 46% 58%;
 }
 
-:lang(en) .hero-sign {
-  --sign-start: 2.52s;
-}
-
-html.js .hero-sign.is-pending .sign-ink {
+html.js .hero-sign.is-pending {
   visibility: hidden;
 }
 
