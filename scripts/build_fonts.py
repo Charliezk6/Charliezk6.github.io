@@ -123,6 +123,24 @@ def main():
             ["latin"],
         )
     )
+    rules.append(
+        save_family(
+            "https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap&text="
+            + quote("天天开心"),
+            "Ma Shan Zheng",
+            "ma-shan-zheng",
+            [],
+        )
+    )
+    rules.append(
+        save_family(
+            "https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap&text="
+            + quote("Stay joyful, every day"),
+            "Caveat",
+            "caveat",
+            [],
+        )
+    )
     (ROOT / "css" / "fonts.css").write_text("".join(rules), encoding="utf-8")
     print("wrote css/fonts.css")
 

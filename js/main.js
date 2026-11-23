@@ -108,17 +108,39 @@
       .join("");
   };
 
-  const renderResearch = (items) => {
-    researchEl.innerHTML = items
-      .map(
-        (item) => `
+  const researchLinks = [
+    [],
+    [{ doc: 2, file: 0 }],
+    [
+      { doc: 0, file: 0 },
+      { doc: 0, file: 1 },
+    ],
+    [
+      { doc: 1, file: 0 },
+      { doc: 1, file: 1 },
+    ],
+  ];
+
+  const renderResearch = (dict) => {
+    researchEl.innerHTML = dict.resume.research
+      .map((item, index) => {
+        const keys = (researchLinks[index] || [])
+          .map(({ doc, file }) => {
+            const meta = dict.computing.items[doc] && dict.computing.items[doc].files[file];
+            if (!meta) return "";
+            const label = dict.computing[meta.role] || meta.name;
+            return `<button type="button" class="doc-key" data-doc="${doc}" data-file="${file}">${esc(label)}</button>`;
+          })
+          .join("");
+        return `
       <article class="research-item">
         <p class="research-tag">${esc(item.tag)}</p>
         <h3>${esc(item.title)}</h3>
         <p class="research-meta">${esc(item.meta)}</p>
         <p class="research-detail">${esc(item.detail)}</p>
-      </article>`
-      )
+        ${keys ? `<div class="doc-keys">${keys}</div>` : ""}
+      </article>`;
+      })
       .join("");
   };
 
@@ -395,14 +417,91 @@
     playerFab.setAttribute("aria-label", on ? dict.music.pause : dict.music.play);
   };
 
+  let audioCtx = null;
+  let analyser = null;
+  let freqBins = null;
+  let levelFrame = 0;
+  const heroSign = () => document.querySelector(".hero-sign");
+  const eqBars = () => (playerFab ? [...playerFab.querySelectorAll(".eq i")] : []);
+
+  const resetLevels = () => {
+    window.cancelAnimationFrame(levelFrame);
+    levelFrame = 0;
+    if (playerFab) playerFab.classList.remove("is-live");
+    eqBars().forEach((bar) => bar.style.removeProperty("height"));
+    heroSign()?.style.removeProperty("--audio-breath");
+  };
+
+  const paintLevels = () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!analyser || !siteAudio || siteAudio.paused || siteAudio.ended || reduce) {
+      resetLevels();
+      return;
+    }
+    analyser.getByteFrequencyData(freqBins);
+    const spans = [
+      [1, 3],
+      [3, 6],
+      [6, 11],
+      [11, 18],
+    ];
+    const bands = spans.map(([from, to]) => {
+      let sum = 0;
+      for (let i = from; i < to; i += 1) sum += freqBins[i] || 0;
+      return sum / (to - from) / 255;
+    });
+    eqBars().forEach((bar, index) => {
+      const level = 0.22 + (bands[index] || 0) * 0.78;
+      bar.style.height = `${(level * 0.85).toFixed(3)}rem`;
+    });
+    const energy = bands[0] * 0.5 + bands[1] * 0.32 + bands[2] * 0.18;
+    heroSign()?.style.setProperty("--audio-breath", Math.max(0, Math.min(0.04, energy * 0.04)).toFixed(4));
+    levelFrame = window.requestAnimationFrame(paintLevels);
+  };
+
+  const ensureAnalyser = async () => {
+    if (!siteAudio) return;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    try {
+      if (!audioCtx) {
+        const ctx = new Ctx();
+        const source = ctx.createMediaElementSource(siteAudio);
+        const node = ctx.createAnalyser();
+        node.fftSize = 64;
+        node.smoothingTimeConstant = 0.8;
+        source.connect(node);
+        node.connect(ctx.destination);
+        audioCtx = ctx;
+        analyser = node;
+        freqBins = new Uint8Array(node.frequencyBinCount);
+      }
+      if (audioCtx.state === "suspended") await audioCtx.resume();
+      if (playerFab) playerFab.classList.add("is-live");
+    } catch (error) {
+      analyser = null;
+    }
+  };
+
+  const startLevels = () => {
+    if (!analyser) return;
+    window.cancelAnimationFrame(levelFrame);
+    if (playerFab) playerFab.classList.add("is-live");
+    levelFrame = window.requestAnimationFrame(paintLevels);
+  };
+
   const toggleAudio = () => {
     if (!siteAudio) return;
     if (!siteAudio.paused && !siteAudio.ended) {
       siteAudio.pause();
       return;
     }
-    const played = siteAudio.play();
-    if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+    const start = async () => {
+      await ensureAnalyser();
+      const played = siteAudio.play();
+      if (played) played.then(() => setPlaying(true)).catch(() => setPlaying(false));
+    };
+    start();
   };
 
   const tryAutoplay = () => {
@@ -461,7 +560,12 @@
     incoming.width = current.w;
     incoming.height = current.h;
     incoming.alt = alt;
+    incoming.classList.toggle("is-landscape", current.w > current.h);
     incoming.removeAttribute("aria-hidden");
+    const heroCount = document.getElementById("hero-count");
+    const heroCaption = document.getElementById("hero-caption");
+    if (heroCount) heroCount.textContent = `${String(heroIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
+    if (heroCaption) heroCaption.textContent = alt;
     outgoing.alt = "";
     outgoing.setAttribute("aria-hidden", "true");
     if (!animate || heroMotion().matches) {
@@ -507,16 +611,37 @@
 
   if (heroFrame) {
     let swipeX = null;
+    let heroSwipe = false;
     heroFrame.addEventListener("pointerdown", (event) => {
       if (event.target.closest("button")) return;
       swipeX = event.clientX;
+      heroSwipe = false;
     });
     heroFrame.addEventListener("pointerup", (event) => {
       if (swipeX == null) return;
       const delta = event.clientX - swipeX;
       swipeX = null;
       if (Math.abs(delta) < 42) return;
+      heroSwipe = true;
       stepHero(delta < 0 ? 1 : -1);
+    });
+    heroFrame.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "touch") return;
+      heroPaused = true;
+      stopHero();
+    });
+    heroFrame.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "touch") return;
+      heroPaused = false;
+      startHero();
+    });
+    heroFrame.addEventListener("click", (event) => {
+      if (event.target.closest("button")) return;
+      if (heroSwipe) {
+        heroSwipe = false;
+        return;
+      }
+      showPhoto(heroIndex);
     });
     document.getElementById("hero-prev")?.addEventListener("click", () => stepHero(-1));
     document.getElementById("hero-next")?.addEventListener("click", () => stepHero(1));
@@ -601,14 +726,28 @@
     renderComputing(dict);
     renderWriting(dict.writing.posts);
     renderTimeline(dict.resume.path);
-    renderResearch(dict.resume.research);
+    renderResearch(dict);
     renderGallery(dict);
     const wechatCopy = document.getElementById("wechat-copy");
     if (wechatCopy && dict.writing.account) wechatCopy.dataset.copy = dict.writing.account;
     if (!heroReady) paintHero(false);
     else {
       const current = (window.PHOTOS || [])[heroIndex];
-      document.querySelector(".hero-slide.is-current")?.setAttribute("alt", photoAlt(current));
+      const alt = photoAlt(current);
+      document.querySelector(".hero-slide.is-current")?.setAttribute("alt", alt);
+      const heroCaption = document.getElementById("hero-caption");
+      if (heroCaption) heroCaption.textContent = alt;
+    }
+    const skillsEl = document.querySelector(".skills");
+    if (skillsEl) {
+      const parts = skillsEl.textContent.split("·").map((part) => part.trim()).filter(Boolean);
+      skillsEl.replaceChildren();
+      parts.forEach((part) => {
+        const chip = document.createElement("span");
+        chip.className = "skill-chip";
+        chip.textContent = part;
+        skillsEl.appendChild(chip);
+      });
     }
     const playing = document.getElementById("now-playing");
     if (playing && dict.now && dict.now.playingHref) playing.href = dict.now.playingHref;
@@ -700,9 +839,18 @@
   if (siteAudio) {
     if (!siteAudio.getAttribute("src")) siteAudio.src = AUDIO_SRC;
     siteAudio.preload = "auto";
-    siteAudio.addEventListener("playing", () => setPlaying(true));
-    siteAudio.addEventListener("pause", () => setPlaying(false));
-    siteAudio.addEventListener("ended", () => setPlaying(false));
+    siteAudio.addEventListener("playing", () => {
+      setPlaying(true);
+      startLevels();
+    });
+    siteAudio.addEventListener("pause", () => {
+      setPlaying(false);
+      resetLevels();
+    });
+    siteAudio.addEventListener("ended", () => {
+      setPlaying(false);
+      resetLevels();
+    });
     tryAutoplay();
   }
   if (playerFab) playerFab.addEventListener("click", toggleAudio);
@@ -734,6 +882,13 @@
     if (!key) return;
     openViewer(Number(key.dataset.doc), Number(key.dataset.file));
   });
+  if (researchEl) {
+    researchEl.addEventListener("click", (event) => {
+      const key = event.target.closest("[data-file]");
+      if (!key) return;
+      openViewer(Number(key.dataset.doc), Number(key.dataset.file));
+    });
+  }
 
   if (dossierClose) dossierClose.addEventListener("click", closeDossier);
   if (dossierEl) {
@@ -872,7 +1027,7 @@
       );
     };
     const pause = 110;
-    const budget = 2590;
+    const budget = 2850;
     const totalLen = strokes.reduce((sum, stroke) => sum + stroke.length, 0);
     const startAt = performance.now() + nameEnd() + 800;
     svg.dataset.signAt = String(startAt);
