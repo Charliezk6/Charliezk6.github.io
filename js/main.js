@@ -797,5 +797,136 @@
     if (event.key === "ArrowRight") showPhoto(photoIndex + 1);
   });
 
+  const easeStroke = (t) => t * t * (3 - 2 * t);
+
+  const corner = (a, b, c) => {
+    const ux = b.x - a.x;
+    const uy = b.y - a.y;
+    const vx = c.x - b.x;
+    const vy = c.y - b.y;
+    const cross = Math.hypot(ux, uy) * Math.hypot(vx, vy) || 1;
+    const dot = Math.min(1, Math.max(-1, (ux * vx + uy * vy) / cross));
+    return Math.acos(dot);
+  };
+
+  const samplePace = (pen, length) => {
+    const count = Math.max(32, Math.round(length / 8));
+    const points = [];
+    for (let i = 0; i <= count; i += 1) points.push(pen.getPointAtLength((length * i) / count));
+    const weights = [];
+    for (let i = 0; i < count; i += 1) {
+      const turn = i === 0 || i === count - 1 ? 0 : corner(points[i - 1], points[i], points[i + 1]);
+      const sharp = Math.min(turn / 1.35, 1);
+      const edge = Math.min(i, count - 1 - i) / 8;
+      const ends = edge >= 1 ? 1 : 0.55 + 0.45 * edge;
+      weights.push(ends * (1 + sharp * 2.4));
+    }
+    const cum = [0];
+    for (let i = 0; i < count; i += 1) cum.push(cum[i] + weights[i]);
+    const sum = cum[count] || 1;
+    return cum.map((value) => value / sum);
+  };
+
+  const paceAt = (cum, t) => {
+    const last = cum.length - 1;
+    let lo = 0;
+    let hi = last;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (cum[mid] < t) lo = mid + 1;
+      else hi = mid;
+    }
+    const index = Math.max(lo, 1);
+    const span = cum[index] - cum[index - 1] || 1;
+    const f = Math.min(1, Math.max(0, (t - cum[index - 1]) / span));
+    return (index - 1 + f) / last;
+  };
+
+  const mountSignature = () => {
+    const svg = document.querySelector(".hero-sign");
+    if (!svg || svg.dataset.mounted) return;
+    svg.dataset.mounted = "1";
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      svg.classList.remove("is-pending");
+      return;
+    }
+    const strokes = [...svg.querySelectorAll(".sign-pen")].map((pen) => {
+      const length = pen.getTotalLength();
+      const gap = Math.ceil(length + 160);
+      pen.style.strokeDashoffset = "0";
+      pen.style.strokeDasharray = `0 ${gap}`;
+      pen.style.visibility = "hidden";
+      return { pen, length, gap, pace: samplePace(pen, length) };
+    });
+    if (!strokes.length) {
+      svg.classList.remove("is-pending");
+      return;
+    }
+
+    const nameEnd = () => {
+      const chars = [...document.querySelectorAll(".name-reveal .char")];
+      if (!chars.length) return 1270;
+      return Math.max(
+        ...chars.map((ch) => (parseFloat(ch.style.getPropertyValue("--d")) || 0) + 1150)
+      );
+    };
+    const pause = 110;
+    const budget = 2590;
+    const totalLen = strokes.reduce((sum, stroke) => sum + stroke.length, 0);
+    const startAt = performance.now() + nameEnd() + 800;
+    svg.dataset.signAt = String(startAt);
+
+    const paint = (stroke, drawn) => {
+      if (drawn <= 1.2) {
+        stroke.pen.style.visibility = "hidden";
+        stroke.pen.style.strokeDasharray = `0 ${stroke.gap}`;
+        return;
+      }
+      stroke.pen.style.visibility = "visible";
+      const shown = Math.min(drawn, stroke.length);
+      stroke.pen.style.strokeDasharray = `${shown.toFixed(2)} ${stroke.gap}`;
+    };
+
+    let drawClock = 0;
+    let index = 0;
+    let pauseLeft = 0;
+    let last = performance.now();
+    let opened = false;
+    const tick = (now) => {
+      const dt = Math.min(48, now - last);
+      last = now;
+      if (now < startAt) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      if (!opened) {
+        svg.classList.remove("is-pending");
+        opened = true;
+      }
+      if (pauseLeft > 0) {
+        pauseLeft -= dt;
+        requestAnimationFrame(tick);
+        return;
+      }
+      const stroke = strokes[index];
+      const share = (stroke.length / totalLen) * budget;
+      drawClock = Math.min(share, drawClock + dt);
+      const drawn = paceAt(stroke.pace, easeStroke(Math.min(drawClock / share, 1))) * stroke.length;
+      paint(stroke, drawn);
+      if (drawClock >= share - 0.4) {
+        stroke.pen.style.visibility = "visible";
+        stroke.pen.style.strokeDasharray = "none";
+        if (index >= strokes.length - 1) return;
+        pauseLeft = pause;
+        drawClock = 0;
+        index += 1;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
   applyLang(lang);
+  mountSignature();
 })();
